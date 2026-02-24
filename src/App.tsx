@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
@@ -13,12 +13,34 @@ function buildMailTo(subject: string, body: string) {
 
 type ContactChannel = 'WHATSAPP' | 'EMAIL';
 
+type TrailPoint = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  life: number; // 0..1
+};
+
 export default function App() {
   const [showWppPopup, setShowWppPopup] = useState(true);
 
   // Mobile menu
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // === HERO "LIGHT TRAIL" (canvas) ===
+  const heroRef = useRef<HTMLElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+
+  const trailRef = useRef<TrailPoint[]>([]);
+  const pointerRef = useRef<{ x: number; y: number } | null>(null);
+  const prevPointerRef = useRef<{ x: number; y: number } | null>(null);
+  const activeRef = useRef(false);
+  const lastTRef = useRef<number>(0);
+
+  // Limite de FPS (30fps)
+  const frameGateRef = useRef<number>(0);
 
   // Contato (abas + opções)
   const [contactChannel, setContactChannel] = useState<ContactChannel>('WHATSAPP');
@@ -33,7 +55,7 @@ export default function App() {
     return () => window.clearTimeout(t);
   }, []);
 
-  // Detecta mobile (sem precisar mexer no CSS agora)
+  // Detecta mobile
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)');
 
@@ -45,7 +67,6 @@ export default function App() {
     apply();
 
     if (typeof mq.addEventListener === 'function') mq.addEventListener('change', apply);
-    // fallback Safari antigo
     // @ts-ignore
     else if (typeof mq.addListener === 'function') mq.addListener(apply);
 
@@ -67,6 +88,216 @@ export default function App() {
       };
     }
   }, [isMobile, mobileMenuOpen]);
+
+  // Só liga esse efeito quando tem mouse de verdade (desktop)
+  const heroCanUseMouse = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  }, []);
+
+  const resizeHeroCanvas = () => {
+    const heroEl = heroRef.current;
+    const c = canvasRef.current;
+    if (!heroEl || !c) return;
+
+    // PERF: DPR 1 (bem leve)
+    const dpr = 1;
+
+    const rect = heroEl.getBoundingClientRect();
+    c.style.width = `${rect.width}px`;
+    c.style.height = `${rect.height}px`;
+    c.width = Math.floor(rect.width * dpr);
+    c.height = Math.floor(rect.height * dpr);
+
+    const ctx = c.getContext('2d');
+    if (ctx) {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+    }
+  };
+
+  const pushTrailPoint = (x: number, y: number, vx: number, vy: number) => {
+    const t = trailRef.current;
+
+    // rastro “fluido”: adiciona 2 pontos quando move rápido
+    const speed = Math.min(1, Math.sqrt(vx * vx + vy * vy) / 22);
+    const count = speed > 0.45 ? 2 : 1;
+
+    for (let i = 0; i < count; i++) {
+      t.push({
+        x,
+        y,
+        vx: vx * (0.6 + Math.random() * 0.35) + (Math.random() - 0.5) * 0.6,
+        vy: vy * (0.6 + Math.random() * 0.35) + (Math.random() - 0.5) * 0.6,
+        life: 1,
+      });
+    }
+
+    // limite baixo (leve)
+    const max = 18;
+    if (t.length > max) t.splice(0, t.length - max);
+  };
+
+  const drawHeroLight = (t: number) => {
+    const c = canvasRef.current;
+    const heroEl = heroRef.current;
+    if (!c || !heroEl) return;
+
+    // 30fps
+    if (t - frameGateRef.current < 33) return;
+    frameGateRef.current = t;
+
+    const ctx = c.getContext('2d');
+    if (!ctx) return;
+
+    const rect = heroEl.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+
+    const last = lastTRef.current || t;
+    const dt = Math.min(0.05, (t - last) / 1000);
+    lastTRef.current = t;
+
+    // “evapora” suave pra não manchar
+    ctx.save();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = `rgba(0,0,0,${activeRef.current ? 0.22 : 0.28})`;
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+
+    // atualiza rastro
+    const arr = trailRef.current;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      const p = arr[i];
+
+      p.x += p.vx * (60 * dt);
+      p.y += p.vy * (60 * dt);
+
+      // drag (fica “fumacinha”)
+      p.vx *= 0.92;
+      p.vy *= 0.92;
+
+      // some rápido, mas suave
+      p.life -= 1.25 * dt;
+
+      if (p.life <= 0) arr.splice(i, 1);
+    }
+
+    // desenha luz (pequena + rastro)
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+
+    // cores: dourado premium (sem “bolha”)
+    for (let i = 0; i < arr.length; i++) {
+      const p = arr[i];
+      const a = Math.max(0, Math.min(1, p.life));
+
+      // menor e sutil
+      const size = 52 + (1 - a) * 22;
+
+      // cria “rastro” deslocando o centro contra o movimento
+      const vx = p.vx;
+      const vy = p.vy;
+      const mag = Math.max(1, Math.sqrt(vx * vx + vy * vy));
+      const nx = -vx / mag;
+      const ny = -vy / mag;
+
+      const offset = 18;
+      const cx = p.x + nx * offset;
+      const cy = p.y + ny * offset;
+
+      // outer haze
+      let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 1.9);
+      g.addColorStop(0, `rgba(212,175,55,${0.12 * a})`);
+      g.addColorStop(0.35, `rgba(212,175,55,${0.06 * a})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(cx, cy, size * 1.9, 0, Math.PI * 2);
+      ctx.fill();
+
+      // inner core (bem pequeno)
+      g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
+      g.addColorStop(0, `rgba(249,223,123,${0.14 * a})`);
+      g.addColorStop(0.25, `rgba(212,175,55,${0.09 * a})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore();
+
+    // para quando não tiver nada
+    if (!activeRef.current && trailRef.current.length === 0) {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    }
+  };
+
+  const startHeroLoop = () => {
+    if (!heroCanUseMouse) return;
+    if (rafRef.current) return;
+
+    lastTRef.current = 0;
+    frameGateRef.current = 0;
+
+    const loop = (time: number) => {
+      drawHeroLight(time);
+      rafRef.current = requestAnimationFrame(loop);
+    };
+
+    rafRef.current = requestAnimationFrame(loop);
+  };
+
+  useEffect(() => {
+    if (!heroCanUseMouse) return;
+
+    resizeHeroCanvas();
+    const onResize = () => resizeHeroCanvas();
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    };
+  }, [heroCanUseMouse]);
+
+  const onHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!heroCanUseMouse) return;
+    const el = heroRef.current;
+    if (!el) return;
+
+    const r = el.getBoundingClientRect();
+    const x = Math.max(0, Math.min(r.width, e.clientX - r.left));
+    const y = Math.max(0, Math.min(r.height, e.clientY - r.top));
+
+    const prev = prevPointerRef.current;
+    const vx = prev ? x - prev.x : 0;
+    const vy = prev ? y - prev.y : 0;
+
+    pointerRef.current = { x, y };
+    prevPointerRef.current = { x, y };
+
+    activeRef.current = true;
+
+    // adiciona rastro
+    pushTrailPoint(x, y, vx, vy);
+
+    startHeroLoop();
+  };
+
+  const onHeroMouseLeave = () => {
+    activeRef.current = false;
+    pointerRef.current = null;
+    prevPointerRef.current = null;
+  };
 
   const defaultMessage = useMemo(() => {
     return `Olá! Vim pelo site da STAR LIMP. Quero tirar uma dúvida e solicitar um orçamento.`;
@@ -163,7 +394,6 @@ export default function App() {
           STAR <span>LIMP</span>
         </div>
 
-        {/* Desktop nav */}
         {!isMobile && (
           <nav className="nav-menu">
             <a href="#home">INÍCIO</a>
@@ -173,7 +403,6 @@ export default function App() {
           </nav>
         )}
 
-        {/* Desktop CTA */}
         {!isMobile && (
           <a
             href={headerWppLink}
@@ -186,7 +415,6 @@ export default function App() {
           </a>
         )}
 
-        {/* Mobile actions */}
         {isMobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <a
@@ -232,7 +460,6 @@ export default function App() {
         )}
       </header>
 
-      {/* Mobile menu overlay */}
       {isMobile && mobileMenuOpen && (
         <div
           role="dialog"
@@ -288,73 +515,30 @@ export default function App() {
             </div>
 
             <div style={{ padding: 14, display: 'grid', gap: 10 }}>
-              <a
-                href="#home"
-                onClick={closeMobileMenu}
-                style={{
-                  textDecoration: 'none',
-                  color: 'rgba(255,255,255,0.92)',
-                  letterSpacing: 2,
-                  fontSize: 12,
-                  padding: '12px 10px',
-                  border: '1px solid rgba(255,255,255,0.10)',
-                  background: 'rgba(255,255,255,0.03)',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Início
-              </a>
-
-              <a
-                href="#sobre"
-                onClick={closeMobileMenu}
-                style={{
-                  textDecoration: 'none',
-                  color: 'rgba(255,255,255,0.92)',
-                  letterSpacing: 2,
-                  fontSize: 12,
-                  padding: '12px 10px',
-                  border: '1px solid rgba(255,255,255,0.10)',
-                  background: 'rgba(255,255,255,0.03)',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Sobre nós
-              </a>
-
-              <a
-                href="#produtos"
-                onClick={closeMobileMenu}
-                style={{
-                  textDecoration: 'none',
-                  color: 'rgba(255,255,255,0.92)',
-                  letterSpacing: 2,
-                  fontSize: 12,
-                  padding: '12px 10px',
-                  border: '1px solid rgba(255,255,255,0.10)',
-                  background: 'rgba(255,255,255,0.03)',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Produtos
-              </a>
-
-              <a
-                href="#contato"
-                onClick={closeMobileMenu}
-                style={{
-                  textDecoration: 'none',
-                  color: 'rgba(255,255,255,0.92)',
-                  letterSpacing: 2,
-                  fontSize: 12,
-                  padding: '12px 10px',
-                  border: '1px solid rgba(255,255,255,0.10)',
-                  background: 'rgba(255,255,255,0.03)',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Contato
-              </a>
+              {[
+                { href: '#home', label: 'Início' },
+                { href: '#sobre', label: 'Sobre nós' },
+                { href: '#produtos', label: 'Produtos' },
+                { href: '#contato', label: 'Contato' },
+              ].map((i) => (
+                <a
+                  key={i.href}
+                  href={i.href}
+                  onClick={closeMobileMenu}
+                  style={{
+                    textDecoration: 'none',
+                    color: 'rgba(255,255,255,0.92)',
+                    letterSpacing: 2,
+                    fontSize: 12,
+                    padding: '12px 10px',
+                    border: '1px solid rgba(255,255,255,0.10)',
+                    background: 'rgba(255,255,255,0.03)',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {i.label}
+                </a>
+              ))}
 
               <a
                 href={headerWppLink}
@@ -389,8 +573,30 @@ export default function App() {
       )}
 
       {/* HOME */}
-      <section id="home" className="hero-section">
-        <div className="hero-container">
+      <section
+        id="home"
+        ref={(n) => (heroRef.current = n)}
+        className="hero-section"
+        onMouseMove={onHeroMouseMove}
+        onMouseLeave={onHeroMouseLeave}
+        style={{ position: 'relative', overflow: 'hidden' }}
+      >
+        {heroCanUseMouse && (
+          <canvas
+            ref={(n) => (canvasRef.current = n)}
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 0,
+              pointerEvents: 'none',
+            }}
+          />
+        )}
+
+        <div className="hero-container" style={{ position: 'relative', zIndex: 1 }}>
           <div className="hero-badge">EXCELÊNCIA EM CUIDADO EQUINO</div>
 
           <h1 className="hero-title">
@@ -420,8 +626,7 @@ export default function App() {
               Nossa Linha <span className="gold-text-gradient">Premium</span>
             </h2>
             <p className="products-subtitle">
-              Desenvolvidos com ingredientes selecionados para garantir o máximo de saúde, brilho e proteção para o seu
-              cavalo.
+              Desenvolvidos com ingredientes selecionados para garantir o máximo de saúde, brilho e proteção para o seu cavalo.
             </p>
           </div>
 
@@ -479,8 +684,7 @@ export default function App() {
               Sobre a <span className="gold-text-gradient">Marca</span>
             </h2>
             <p className="section-subtitle">
-              A STAR LIMP nasceu para elevar o padrão de higiene e bem-estar equino, unindo ingredientes selecionados,
-              performance e cuidado em cada fórmula.
+              A STAR LIMP nasceu para elevar o padrão de higiene e bem-estar equino, unindo ingredientes selecionados, performance e cuidado em cada fórmula.
             </p>
           </div>
 
@@ -495,8 +699,7 @@ export default function App() {
             <div className="about-card">
               <h3 className="about-title">Fórmulas Selecionadas</h3>
               <p className="about-text">
-                Ingredientes como óleo de citronela e óleo de coco, pensados para conforto, maciez e performance no dia
-                a dia.
+                Ingredientes como óleo de citronela e óleo de coco, pensados para conforto, maciez e performance no dia a dia.
               </p>
             </div>
 
@@ -508,7 +711,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* CONTATO (abas + opções) */}
+      {/* CONTATO */}
       <section id="contato" className="section-block">
         <div className="section-container">
           <div className="section-header">
@@ -519,7 +722,6 @@ export default function App() {
           </div>
 
           <div className="contact-card">
-            {/* Abas */}
             <div
               style={{
                 display: 'flex',
@@ -572,25 +774,9 @@ export default function App() {
               </button>
             </div>
 
-            {/* Seletor de assunto + dados */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
-                gap: 12,
-                alignItems: 'end',
-              }}
-            >
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: 12, alignItems: 'end' }}>
               <div style={{ gridColumn: 'span 12' }}>
-                <div
-                  style={{
-                    color: 'rgba(229,231,235,0.7)',
-                    fontSize: 11,
-                    letterSpacing: '0.25em',
-                    textTransform: 'uppercase',
-                    marginBottom: 8,
-                  }}
-                >
+                <div style={{ color: 'rgba(229,231,235,0.7)', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 8 }}>
                   Assunto
                 </div>
 
@@ -616,15 +802,7 @@ export default function App() {
               </div>
 
               <div style={{ gridColumn: 'span 6' }}>
-                <div
-                  style={{
-                    color: 'rgba(229,231,235,0.7)',
-                    fontSize: 11,
-                    letterSpacing: '0.25em',
-                    textTransform: 'uppercase',
-                    marginBottom: 8,
-                  }}
-                >
+                <div style={{ color: 'rgba(229,231,235,0.7)', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 8 }}>
                   Nome (opcional)
                 </div>
                 <input
@@ -643,15 +821,7 @@ export default function App() {
               </div>
 
               <div style={{ gridColumn: 'span 6' }}>
-                <div
-                  style={{
-                    color: 'rgba(229,231,235,0.7)',
-                    fontSize: 11,
-                    letterSpacing: '0.25em',
-                    textTransform: 'uppercase',
-                    marginBottom: 8,
-                  }}
-                >
+                <div style={{ color: 'rgba(229,231,235,0.7)', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 8 }}>
                   Cidade/UF (opcional)
                 </div>
                 <input
@@ -670,16 +840,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* CTA principal */}
-            <div
-              style={{
-                marginTop: 16,
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 12,
-                justifyContent: 'center',
-              }}
-            >
+            <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
               {contactChannel === 'WHATSAPP' ? (
                 <a
                   className="btn-gold contact-btn"
@@ -702,24 +863,8 @@ export default function App() {
               </a>
             </div>
 
-            {/* Preview da mensagem */}
-            <div
-              style={{
-                marginTop: 16,
-                borderTop: '1px solid rgba(255,255,255,0.08)',
-                paddingTop: 16,
-              }}
-            >
-              <div
-                style={{
-                  color: 'rgba(229,231,235,0.7)',
-                  fontSize: 11,
-                  letterSpacing: '0.25em',
-                  textTransform: 'uppercase',
-                  marginBottom: 10,
-                  textAlign: 'center',
-                }}
-              >
+            <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
+              <div style={{ color: 'rgba(229,231,235,0.7)', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 10, textAlign: 'center' }}>
                 Prévia da mensagem
               </div>
 
@@ -827,7 +972,8 @@ export default function App() {
                   fontSize: 11,
                   fontWeight: 700,
                   color: 'black',
-                  background: 'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
+                  background:
+                    'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
                 }}
               >
                 CHAMAR NO WHATSAPP
