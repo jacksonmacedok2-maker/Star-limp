@@ -16,6 +16,10 @@ type ContactChannel = 'WHATSAPP' | 'EMAIL';
 export default function App() {
   const [showWppPopup, setShowWppPopup] = useState(true);
 
+  // Mobile menu
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   // Contato (abas + opções)
   const [contactChannel, setContactChannel] = useState<ContactChannel>('WHATSAPP');
   const [contactTopic, setContactTopic] = useState<'ORCAMENTO' | 'DUVIDAS' | 'REVENDEDOR' | 'PARCERIA' | 'OUTROS'>(
@@ -28,6 +32,41 @@ export default function App() {
     const t = window.setTimeout(() => setShowWppPopup(false), 6500);
     return () => window.clearTimeout(t);
   }, []);
+
+  // Detecta mobile (sem precisar mexer no CSS agora)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+
+    const apply = () => {
+      setIsMobile(mq.matches);
+      if (!mq.matches) setMobileMenuOpen(false);
+    };
+
+    apply();
+
+    if (typeof mq.addEventListener === 'function') mq.addEventListener('change', apply);
+    // fallback Safari antigo
+    // @ts-ignore
+    else if (typeof mq.addListener === 'function') mq.addListener(apply);
+
+    return () => {
+      if (typeof mq.removeEventListener === 'function') mq.removeEventListener('change', apply);
+      // @ts-ignore
+      else if (typeof mq.removeListener === 'function') mq.removeListener(apply);
+    };
+  }, []);
+
+  // trava scroll do body quando menu mobile abre
+  useEffect(() => {
+    if (!isMobile) return;
+    if (mobileMenuOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [isMobile, mobileMenuOpen]);
 
   const defaultMessage = useMemo(() => {
     return `Olá! Vim pelo site da STAR LIMP. Quero tirar uma dúvida e solicitar um orçamento.`;
@@ -115,6 +154,8 @@ export default function App() {
     return buildWhatsAppLink(msg);
   };
 
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
     <div className="star-limp-site">
       <header className="main-header">
@@ -122,23 +163,230 @@ export default function App() {
           STAR <span>LIMP</span>
         </div>
 
-        <nav className="nav-menu">
-          <a href="#home">INÍCIO</a>
-          <a href="#sobre">SOBRE NÓS</a>
-          <a href="#produtos">PRODUTOS</a>
-          <a href="#contato">CONTATO</a>
-        </nav>
+        {/* Desktop nav */}
+        {!isMobile && (
+          <nav className="nav-menu">
+            <a href="#home">INÍCIO</a>
+            <a href="#sobre">SOBRE NÓS</a>
+            <a href="#produtos">PRODUTOS</a>
+            <a href="#contato">CONTATO</a>
+          </nav>
+        )}
 
-        <a
-          href={headerWppLink}
-          className="btn-cta-header"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => setShowWppPopup(false)}
-        >
-          FALAR COM ESPECIALISTA
-        </a>
+        {/* Desktop CTA */}
+        {!isMobile && (
+          <a
+            href={headerWppLink}
+            className="btn-cta-header"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setShowWppPopup(false)}
+          >
+            FALAR COM ESPECIALISTA
+          </a>
+        )}
+
+        {/* Mobile actions */}
+        {isMobile && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <a
+              href={headerWppLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setShowWppPopup(false)}
+              style={{
+                border: '1px solid rgba(212, 175, 55, 0.45)',
+                color: 'var(--color-gold)',
+                padding: '8px 10px',
+                fontSize: 10,
+                letterSpacing: 2,
+                textDecoration: 'none',
+                textTransform: 'uppercase',
+                background: 'rgba(0,0,0,0.25)',
+              }}
+            >
+              WhatsApp
+            </a>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Abrir menu"
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 12,
+                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'rgba(0,0,0,0.25)',
+                color: 'rgba(255,255,255,0.9)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 18,
+              }}
+            >
+              ☰
+            </button>
+          </div>
+        )}
       </header>
+
+      {/* Mobile menu overlay */}
+      {isMobile && mobileMenuOpen && (
+        <div
+          role="dialog"
+          aria-label="Menu"
+          onClick={closeMobileMenu}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9998,
+            background: 'rgba(0,0,0,0.65)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            padding: 16,
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              marginTop: 10,
+              marginLeft: 'auto',
+              width: 'min(92vw, 420px)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(0,0,0,0.78)',
+              boxShadow: '0 18px 40px rgba(0,0,0,0.55)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                padding: 14,
+                borderBottom: '1px solid rgba(255,255,255,0.08)',
+              }}
+            >
+              <div style={{ fontFamily: 'var(--font-serif)', letterSpacing: 2, textTransform: 'uppercase' }}>
+                Menu
+              </div>
+              <button
+                type="button"
+                onClick={closeMobileMenu}
+                aria-label="Fechar menu"
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'rgba(255,255,255,0.75)',
+                  cursor: 'pointer',
+                  fontSize: 18,
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ padding: 14, display: 'grid', gap: 10 }}>
+              <a
+                href="#home"
+                onClick={closeMobileMenu}
+                style={{
+                  textDecoration: 'none',
+                  color: 'rgba(255,255,255,0.92)',
+                  letterSpacing: 2,
+                  fontSize: 12,
+                  padding: '12px 10px',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  background: 'rgba(255,255,255,0.03)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Início
+              </a>
+
+              <a
+                href="#sobre"
+                onClick={closeMobileMenu}
+                style={{
+                  textDecoration: 'none',
+                  color: 'rgba(255,255,255,0.92)',
+                  letterSpacing: 2,
+                  fontSize: 12,
+                  padding: '12px 10px',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  background: 'rgba(255,255,255,0.03)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Sobre nós
+              </a>
+
+              <a
+                href="#produtos"
+                onClick={closeMobileMenu}
+                style={{
+                  textDecoration: 'none',
+                  color: 'rgba(255,255,255,0.92)',
+                  letterSpacing: 2,
+                  fontSize: 12,
+                  padding: '12px 10px',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  background: 'rgba(255,255,255,0.03)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Produtos
+              </a>
+
+              <a
+                href="#contato"
+                onClick={closeMobileMenu}
+                style={{
+                  textDecoration: 'none',
+                  color: 'rgba(255,255,255,0.92)',
+                  letterSpacing: 2,
+                  fontSize: 12,
+                  padding: '12px 10px',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  background: 'rgba(255,255,255,0.03)',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Contato
+              </a>
+
+              <a
+                href={headerWppLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  setShowWppPopup(false);
+                  closeMobileMenu();
+                }}
+                style={{
+                  textDecoration: 'none',
+                  textTransform: 'uppercase',
+                  letterSpacing: 2,
+                  fontSize: 11,
+                  fontWeight: 800,
+                  padding: '12px 12px',
+                  color: 'black',
+                  background:
+                    'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
+                  border: '1px solid rgba(0,0,0,0.25)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 6,
+                }}
+              >
+                Falar com especialista
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* HOME */}
       <section id="home" className="hero-section">
@@ -254,9 +502,7 @@ export default function App() {
 
             <div className="about-card">
               <h3 className="about-title">Feito para Rotina Real</h3>
-              <p className="about-text">
-                Ideal para uso frequente em centros de treinamento, haras e cuidadores exigentes.
-              </p>
+              <p className="about-text">Ideal para uso frequente em centros de treinamento, haras e cuidadores exigentes.</p>
             </div>
           </div>
         </div>
@@ -269,9 +515,7 @@ export default function App() {
             <h2 className="section-title">
               Fale com um <span className="gold-text-gradient">Especialista</span>
             </h2>
-            <p className="section-subtitle">
-              Escolha o canal e o assunto. A mensagem já vai pronta (orçamento, dúvidas, revenda e etc).
-            </p>
+            <p className="section-subtitle">Escolha o canal e o assunto. A mensagem já vai pronta (orçamento, dúvidas, revenda e etc).</p>
           </div>
 
           <div className="contact-card">
@@ -296,9 +540,10 @@ export default function App() {
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
                   fontSize: 11,
-                  border: contactChannel === 'WHATSAPP'
-                    ? '1px solid rgba(212,175,55,0.55)'
-                    : '1px solid rgba(255,255,255,0.18)',
+                  border:
+                    contactChannel === 'WHATSAPP'
+                      ? '1px solid rgba(212,175,55,0.55)'
+                      : '1px solid rgba(255,255,255,0.18)',
                   background: contactChannel === 'WHATSAPP' ? 'rgba(212,175,55,0.10)' : 'transparent',
                   color: contactChannel === 'WHATSAPP' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
                 }}
@@ -315,9 +560,10 @@ export default function App() {
                   letterSpacing: '0.2em',
                   textTransform: 'uppercase',
                   fontSize: 11,
-                  border: contactChannel === 'EMAIL'
-                    ? '1px solid rgba(212,175,55,0.55)'
-                    : '1px solid rgba(255,255,255,0.18)',
+                  border:
+                    contactChannel === 'EMAIL'
+                      ? '1px solid rgba(212,175,55,0.55)'
+                      : '1px solid rgba(255,255,255,0.18)',
                   background: contactChannel === 'EMAIL' ? 'rgba(212,175,55,0.10)' : 'transparent',
                   color: contactChannel === 'EMAIL' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
                 }}
@@ -361,7 +607,7 @@ export default function App() {
                     outline: 'none',
                   }}
                 >
-                  {topics.map(t => (
+                  {topics.map((t) => (
                     <option key={t.key} value={t.key}>
                       {t.label}
                     </option>
@@ -446,11 +692,7 @@ export default function App() {
                   ENVIAR NO WHATSAPP
                 </a>
               ) : (
-                <a
-                  className="btn-gold contact-btn"
-                  href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)}
-                  style={{ minWidth: 280 }}
-                >
+                <a className="btn-gold contact-btn" href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)} style={{ minWidth: 280 }}>
                   ENVIAR E-MAIL
                 </a>
               )}
@@ -585,8 +827,7 @@ export default function App() {
                   fontSize: 11,
                   fontWeight: 700,
                   color: 'black',
-                  background:
-                    'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
+                  background: 'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
                 }}
               >
                 CHAMAR NO WHATSAPP
