@@ -130,6 +130,7 @@ h1, h2, h3, h4 {
   overflow: hidden;
   background-color: #0a0a0a;
 
+  /* Alterado: Caminho relativo padrão de volta para a pasta assets */
   background-image:
     linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
     radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
