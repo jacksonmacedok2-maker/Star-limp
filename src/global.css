@@ -124,15 +124,22 @@ h1, h2, h3, h4 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
+  text-align: left; /* Alterado: Texto alinhado à esquerda */
   padding-top: 5rem; /* compensação do header */
   position: relative;
   overflow: hidden;
   background-color: #0a0a0a;
+
+  /* ✅ AQUI: imagem real do cavalo + overlays premium (mudança mínima) */
   background-image:
-    linear-gradient(to bottom, rgba(10,10,10,0.8), rgba(10,10,10,1)),
+    linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
+    radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
+    url("./assets/hero-horse.jpg"),
     radial-gradient(circle at 2px 2px, rgba(212,175,55,0.03) 1px, transparent 0);
-  background-size: 100% 100%, 40px 40px;
+
+  background-size: 100% 100%, 100% 100%, cover, 40px 40px;
+  background-position: center, center, right center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat;
 }
 
 .star-limp-site {
@@ -165,12 +172,13 @@ h1, h2, h3, h4 {
   color: white;
   margin-bottom: 1.5rem;
   text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+  max-width: 650px; /* Alterado: Limita a largura do título para não cobrir o cavalo */
 }
 
 .hero-subtitle {
   color: #9ca3af;
   max-width: 42rem;
-  margin: 0 auto 2.5rem auto;
+  margin: 0 0 2.5rem 0; /* Alterado: Remove o auto para alinhar à esquerda */
   font-size: 0.875rem;
   letter-spacing: 0.025em;
 }
@@ -184,12 +192,15 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start; /* Alterado: Alinhado à esquerda */
+  align-items: flex-start; /* Alterado: Alinhado à esquerda */
 }
 
 @media (min-width: 768px) {
-  .hero-buttons { flex-direction: row; }
+  .hero-buttons { 
+    flex-direction: row; 
+    align-items: center; /* Mantém os botões centralizados verticalmente entre si */
+  }
 }
 
 .btn-gold {
@@ -206,10 +217,30 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative; /* Alterado: Para o brilho não vazar */
+  overflow: hidden; /* Alterado: Para o brilho não vazar */
+}
+
+/* Alterado: Efeito de brilho que cruza o botão */
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-25deg);
+  transition: left 0.7s ease;
 }
 
 .btn-gold:hover {
   filter: brightness(1.1);
+}
+
+/* Alterado: Aciona o brilho no hover */
+.btn-gold:hover::after {
+  left: 125%;
 }
 
 .btn-outline {
@@ -535,6 +566,7 @@ main {
     padding-top: 6.25rem;
     padding-left: 6%;
     padding-right: 6%;
+    background-position: center, center, center, center; /* no mobile centraliza a foto */
   }
 
   .hero-badge {

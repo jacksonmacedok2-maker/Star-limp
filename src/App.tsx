@@ -24,6 +24,14 @@ type TrailPoint = {
   life: number; // 0..1
 };
 
+type Product = {
+  id: 'shampoo' | 'repelente' | 'abrilhantador';
+  name: string;
+  desc: string;
+  volumes: string[];
+  defaultVolume: string;
+};
+
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -232,6 +240,31 @@ function MobileMenu({
 function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
   const year = new Date().getFullYear();
 
+  const InstagramIcon = ({ className }: { className?: string }) => (
+    <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <path
+        d="M12 16.2a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <path d="M17.6 6.6h.01" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  );
+
+  const WhatsAppIcon = ({ className }: { className?: string }) => (
+    <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M20.52 3.48A11.9 11.9 0 0 0 12.06 0C5.46 0 .1 5.36.1 11.96c0 2.1.55 4.15 1.6 5.96L0 24l6.25-1.64a11.9 11.9 0 0 0 5.81 1.49h.01c6.6 0 11.96-5.36 11.96-11.96 0-3.2-1.25-6.2-3.51-8.41Zm-8.45 18.37h-.01a9.93 9.93 0 0 1-5.06-1.39l-.36-.22-3.71.97.99-3.62-.24-.37a9.9 9.9 0 0 1-1.52-5.26C2.16 6.46 6.56 2.06 12.07 2.06c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.5-4.4 9.9-9.89 9.9Zm5.76-7.4c-.31-.16-1.82-.9-2.1-1-.28-.1-.49-.16-.7.16-.2.31-.8 1-1 1.2-.18.2-.37.23-.68.08-.31-.16-1.3-.48-2.48-1.53-.92-.82-1.54-1.83-1.72-2.14-.18-.31-.02-.47.14-.63.14-.14.31-.37.47-.55.16-.18.2-.31.31-.52.1-.2.05-.39-.03-.55-.08-.16-.7-1.68-.96-2.3-.25-.6-.5-.52-.7-.52h-.6c-.2 0-.52.08-.8.39-.28.31-1.05 1.02-1.05 2.48 0 1.45 1.08 2.86 1.23 3.06.16.2 2.12 3.23 5.14 4.53.72.31 1.28.5 1.72.64.72.23 1.37.2 1.89.12.58-.09 1.82-.74 2.07-1.45.26-.71.26-1.31.18-1.45-.08-.13-.28-.2-.6-.36Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+
   return (
     <footer
       className="site-footer star-footer"
@@ -320,12 +353,14 @@ function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
           color: rgba(255,255,255,0.92);
         }
 
-        .star-footer .star-footer-pill-dot{
-          width: 8px;
-          height: 8px;
-          border-radius: 999px;
-          background: var(--color-gold);
-          box-shadow: 0 0 0 4px rgba(212,175,55,0.10);
+        /* ✅ ÍCONES REAIS */
+        .star-footer .star-footer-pill-ico{
+          width: 16px;
+          height: 16px;
+          color: var(--color-gold);
+          opacity: 0.95;
+          filter: drop-shadow(0 0 10px rgba(212,175,55,0.18));
+          flex: 0 0 auto;
         }
 
         .star-footer .star-footer-news-row{
@@ -429,7 +464,7 @@ function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
                 aria-label={`Abrir Instagram @${INSTAGRAM_HANDLE}`}
                 title={`Instagram @${INSTAGRAM_HANDLE}`}
               >
-                <span className="star-footer-pill-dot" aria-hidden="true" />
+                <InstagramIcon className="star-footer-pill-ico" />
                 Instagram @{INSTAGRAM_HANDLE}
               </a>
 
@@ -441,7 +476,7 @@ function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
                 aria-label="Abrir WhatsApp"
                 title="WhatsApp"
               >
-                <span className="star-footer-pill-dot" aria-hidden="true" />
+                <WhatsAppIcon className="star-footer-pill-ico" />
                 WhatsApp
               </a>
             </div>
@@ -676,6 +711,8 @@ function HomePage({
               height: '100%',
               zIndex: 0,
               pointerEvents: 'none',
+              mixBlendMode: 'screen',
+              opacity: 0.95,
             }}
           />
         )}
@@ -755,10 +792,26 @@ function ProductsPage({
   productWppLink,
   setShowWppPopup,
 }: {
-  products: { name: string; desc: string; meta: string; metaShort: string }[];
-  productWppLink: (p: { name: string; desc: string; metaShort: string }) => string;
+  products: Product[];
+  productWppLink: (p: { name: string; desc: string }, volume: string) => string;
   setShowWppPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const initialSelected = useMemo(() => {
+    const m: Record<string, string> = {};
+    for (const p of products) m[p.id] = p.defaultVolume;
+    return m;
+  }, [products]);
+
+  const [selectedById, setSelectedById] = useState<Record<string, string>>(initialSelected);
+
+  useEffect(() => {
+    setSelectedById(initialSelected);
+  }, [initialSelected]);
+
+  const setVol = (id: string, v: string) => {
+    setSelectedById((prev) => ({ ...prev, [id]: v }));
+  };
+
   return (
     <section className="products-section">
       <div className="section-container">
@@ -771,48 +824,123 @@ function ProductsPage({
           </p>
         </div>
 
+        <style>{`
+          .product-meta-chooser{
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.10);
+          }
+
+          .product-meta-label{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            color: rgba(229,231,235,0.66);
+            font-size: 11px;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+          }
+
+          .product-vol-chips{
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+          }
+
+          .product-chip{
+            appearance: none;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.03);
+            color: rgba(229,231,235,0.92);
+            padding: 10px 12px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: transform .16s ease, border-color .16s ease, background .16s ease, color .16s ease;
+            user-select: none;
+          }
+
+          .product-chip:hover{
+            transform: translateY(-1px);
+            border-color: rgba(212,175,55,0.35);
+            background: rgba(212,175,55,0.06);
+          }
+
+          .product-chip.is-selected{
+            border-color: rgba(212,175,55,0.62);
+            background: rgba(212,175,55,0.12);
+            color: var(--color-gold);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+          }
+
+          .product-chip:focus-visible{
+            outline: 2px solid rgba(212,175,55,0.55);
+            outline-offset: 2px;
+          }
+
+          @media (max-width: 520px){
+            .product-chip{
+              padding: 12px 14px;
+              font-size: 12px;
+            }
+          }
+        `}</style>
+
         <div className="products-grid">
-          <div className="product-card">
-            <div className="product-image-placeholder">
-              <span>Imagem do Shampoo</span>
-            </div>
+          {products.map((p) => {
+            const selected = selectedById[p.id] ?? p.defaultVolume;
 
-            <h3 className="product-name">{products[0].name}</h3>
-            <p className="product-desc">{products[0].desc}</p>
+            return (
+              <div key={p.id} className="product-card">
+                <div className="product-image-placeholder">
+                  <span>
+                    {p.id === 'shampoo' ? 'Imagem do Shampoo' : p.id === 'repelente' ? 'Imagem do Repelente' : 'Imagem do Abrilhantador'}
+                  </span>
+                </div>
 
-            <div className="product-meta">DISPONÍVEL EM: {products[0].metaShort}</div>
+                <h3 className="product-name">{p.name}</h3>
+                <p className="product-desc">{p.desc}</p>
 
-            <a
-              href={productWppLink(products[0])}
-              className="btn-outline product-btn"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setShowWppPopup(false)}
-            >
-              SOLICITAR ORÇAMENTO
-            </a>
-          </div>
+                <div className="product-meta-chooser">
+                  <div className="product-meta-label">
+                    <span>{p.volumes.length > 1 ? 'Escolha o volume' : 'Volume'}</span>
+                    <span style={{ color: 'var(--color-gold)', letterSpacing: '0.22em' }}>{selected.toUpperCase()}</span>
+                  </div>
 
-          <div className="product-card">
-            <div className="product-image-placeholder">
-              <span>Imagem do Repelente</span>
-            </div>
+                  <div className="product-vol-chips" role="radiogroup" aria-label={`Volumes de ${p.name}`}>
+                    {p.volumes.map((v) => {
+                      const isSelected = selected === v;
+                      return (
+                        <button
+                          key={v}
+                          type="button"
+                          className={`product-chip ${isSelected ? 'is-selected' : ''}`}
+                          onClick={() => setVol(p.id, v)}
+                          aria-pressed={isSelected}
+                        >
+                          {v}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-            <h3 className="product-name">{products[1].name}</h3>
-            <p className="product-desc">{products[1].desc}</p>
-
-            <div className="product-meta">VOLUME: {products[1].metaShort.toUpperCase()}</div>
-
-            <a
-              href={productWppLink(products[1])}
-              className="btn-outline product-btn"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setShowWppPopup(false)}
-            >
-              SOLICITAR ORÇAMENTO
-            </a>
-          </div>
+                <a
+                  href={productWppLink({ name: p.name, desc: p.desc }, selected)}
+                  className="btn-outline product-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setShowWppPopup(false)}
+                >
+                  SOLICITAR ORÇAMENTO
+                </a>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -1178,7 +1306,8 @@ function AppShell() {
 
     heroSizeRef.current = { w, h };
 
-    const dpr = 1;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+
     c.style.width = `${w}px`;
     c.style.height = `${h}px`;
     c.width = Math.floor(w * dpr);
@@ -1257,8 +1386,8 @@ function AppShell() {
     lastTRef.current = t;
 
     ctx.save();
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = `rgba(0,0,0,${activeRef.current ? 0.22 : 0.28})`;
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = `rgba(0,0,0,${activeRef.current ? 0.16 : 0.22})`;
     ctx.fillRect(0, 0, w, h);
     ctx.restore();
 
@@ -1279,7 +1408,7 @@ function AppShell() {
     for (let i = 0; i < arr.length; i++) {
       const p = arr[i];
       const a = Math.max(0, Math.min(1, p.life));
-      const size = 52 + (1 - a) * 22;
+      const size = 46 + (1 - a) * 18;
 
       const vx = p.vx;
       const vy = p.vy;
@@ -1287,13 +1416,13 @@ function AppShell() {
       const nx = -vx / mag;
       const ny = -vy / mag;
 
-      const offset = 18;
+      const offset = 16;
       const cx = p.x + nx * offset;
       const cy = p.y + ny * offset;
 
       let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 1.9);
-      g.addColorStop(0, `rgba(212,175,55,${0.12 * a})`);
-      g.addColorStop(0.35, `rgba(212,175,55,${0.06 * a})`);
+      g.addColorStop(0, `rgba(212,175,55,${0.18 * a})`);
+      g.addColorStop(0.35, `rgba(212,175,55,${0.08 * a})`);
       g.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.fillStyle = g;
@@ -1302,8 +1431,8 @@ function AppShell() {
       ctx.fill();
 
       g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
-      g.addColorStop(0, `rgba(249,223,123,${0.14 * a})`);
-      g.addColorStop(0.25, `rgba(212,175,55,${0.09 * a})`);
+      g.addColorStop(0, `rgba(255,235,160,${0.22 * a})`);
+      g.addColorStop(0.25, `rgba(212,175,55,${0.12 * a})`);
       g.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.fillStyle = g;
@@ -1437,27 +1566,36 @@ function AppShell() {
 
   const headerWppLink = buildWhatsAppLink(defaultMessage);
 
-  const products = useMemo(() => {
+  const products = useMemo<Product[]>(() => {
     return [
       {
+        id: 'shampoo',
         name: 'Shampoo Profissional',
         desc: 'Limpeza profunda e brilho natural inigualável. Fórmula exclusiva enriquecida com óleo de citronela e óleo de coco.',
-        meta: 'Disponível em: 1L | 2L | 5L',
-        metaShort: '1L | 2L | 5L',
+        volumes: ['1L', '2L', '5L'],
+        defaultVolume: '2L',
       },
       {
+        id: 'repelente',
         name: 'Repelente Profissional',
         desc: 'Proteção de alta performance contra moscas e mosquitos. Garante o conforto e a tranquilidade que o animal precisa.',
-        meta: 'Volume: 500ml',
-        metaShort: '500ml',
+        volumes: ['500ml'],
+        defaultVolume: '500ml',
+      },
+      {
+        id: 'abrilhantador',
+        name: 'Abrilhantador Profissional',
+        desc: 'Brilho e acabamento premium para a pelagem. Ideal para apresentação e rotina, com toque leve e resultado visível.',
+        volumes: ['500ml'],
+        defaultVolume: '500ml',
       },
     ];
   }, []);
 
-  const productWppLink = (p: { name: string; desc: string; metaShort: string }) => {
+  const productWppLink = (p: { name: string; desc: string }, volume: string) => {
     const msg =
       `Olá! Vim pelo site da STAR LIMP.\n` +
-      `Quero orçamento do ${p.name} (${p.metaShort}).\n` +
+      `Quero orçamento do ${p.name} (${volume}).\n` +
       `Descrição: ${p.desc}\n` +
       `Pode me informar valores e condições?`;
     return buildWhatsAppLink(msg);
@@ -1469,15 +1607,12 @@ function AppShell() {
 
   return (
     <div className="star-limp-site">
-      {/* AJUSTE PREMIUM DESKTOP (uma mudança): melhora margens/largura e remove “vazio gigante” no PC sem mexer no mobile */}
       <style>{`
-        /* Evita largura “torta” e sobra lateral no desktop */
         @media (min-width: 900px){
           .star-limp-site main{
             width: 100%;
           }
 
-          /* A maioria das páginas usa section-container e section-block */
           .star-limp-site .section-container{
             max-width: 1160px;
             margin: 0 auto;
@@ -1485,13 +1620,11 @@ function AppShell() {
             padding-right: 22px;
           }
 
-          /* Reduz altura sobrando entre seções no desktop */
           .star-limp-site .section-block{
             padding-top: 56px;
             padding-bottom: 56px;
           }
 
-          /* A “Experiência Premium” estava ficando com muito espaço embaixo */
           .star-limp-site .section-header{
             margin-bottom: 26px;
           }
@@ -1501,7 +1634,6 @@ function AppShell() {
           }
         }
 
-        /* Em telas muito grandes, mantém premium sem ficar “perdido” */
         @media (min-width: 1400px){
           .star-limp-site .section-container{
             max-width: 1240px;
