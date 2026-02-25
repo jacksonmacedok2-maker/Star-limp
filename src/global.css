@@ -124,13 +124,12 @@ h1, h2, h3, h4 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: left; /* Alterado: Texto alinhado à esquerda */
-  padding-top: 5rem; /* compensação do header */
+  text-align: left;
+  padding-top: 5rem;
   position: relative;
   overflow: hidden;
   background-color: #0a0a0a;
 
-  /* ✅ AQUI: imagem real do cavalo + overlays premium (mudança mínima) */
   background-image:
     linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
     radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
@@ -147,12 +146,9 @@ h1, h2, h3, h4 {
   min-height: 100vh;
 }
 
-/* container do hero (você usa no App) */
 .hero-container {
   width: 100%;
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 6%;
+  padding: 0 5%;
 }
 
 .hero-badge {
@@ -169,16 +165,17 @@ h1, h2, h3, h4 {
 .hero-title {
   font-size: clamp(2rem, 6vw, 3.8rem);
   font-weight: 700;
+  line-height: 1.25;
   color: white;
   margin-bottom: 1.5rem;
   text-shadow: 0 4px 20px rgba(0,0,0,0.8);
-  max-width: 650px; /* Alterado: Limita a largura do título para não cobrir o cavalo */
+  max-width: 650px;
 }
 
 .hero-subtitle {
   color: #9ca3af;
   max-width: 42rem;
-  margin: 0 0 2.5rem 0; /* Alterado: Remove o auto para alinhar à esquerda */
+  margin: 0 0 2.5rem 0;
   font-size: 0.875rem;
   letter-spacing: 0.025em;
 }
@@ -187,19 +184,18 @@ h1, h2, h3, h4 {
   .hero-subtitle { font-size: 1rem; }
 }
 
-/* Botões */
 .hero-buttons {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  justify-content: flex-start; /* Alterado: Alinhado à esquerda */
-  align-items: flex-start; /* Alterado: Alinhado à esquerda */
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 @media (min-width: 768px) {
   .hero-buttons { 
     flex-direction: row; 
-    align-items: center; /* Mantém os botões centralizados verticalmente entre si */
+    align-items: center;
   }
 }
 
@@ -217,11 +213,10 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  position: relative; /* Alterado: Para o brilho não vazar */
-  overflow: hidden; /* Alterado: Para o brilho não vazar */
+  position: relative;
+  overflow: hidden;
 }
 
-/* Alterado: Efeito de brilho que cruza o botão */
 .btn-gold::after {
   content: '';
   position: absolute;
@@ -238,7 +233,6 @@ h1, h2, h3, h4 {
   filter: brightness(1.1);
 }
 
-/* Alterado: Aciona o brilho no hover */
 .btn-gold:hover::after {
   left: 125%;
 }
@@ -262,7 +256,6 @@ h1, h2, h3, h4 {
   color: black;
 }
 
-/* Texto dourado */
 .gold-text-gradient {
   background: linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light));
   -webkit-background-clip: text;
@@ -284,7 +277,6 @@ h1, h2, h3, h4 {
   margin: 0 auto;
 }
 
-/* quando usar section-container dentro de products (rota nova), mantém a mesma largura */
 .products-section .section-container {
   max-width: var(--container-max);
 }
@@ -391,7 +383,6 @@ h1, h2, h3, h4 {
   background: rgba(0, 0, 0, 0.20);
 }
 
-/* garante que as rotas (main > section-block) não criem “buraco” no PC */
 main {
   display: block;
 }
@@ -507,14 +498,12 @@ main {
    DESKTOP: “sem sobras” e ritmo premium
    ========================= */
 @media (min-width: 1100px) {
-  /* reduz a sensação de “buraco” no PC */
   .products-section,
   .section-block {
     padding-top: 5.2rem;
     padding-bottom: 5.2rem;
   }
 
-  /* garante que o footer não fique “perdido” */
   .site-footer {
     padding-top: 3rem;
     padding-bottom: 3rem;
@@ -539,7 +528,6 @@ main {
     font-size: 1.15rem;
   }
 
-  /* menu em uma linha com scroll horizontal */
   .nav-menu {
     gap: 14px;
     overflow-x: auto;
@@ -563,10 +551,12 @@ main {
   }
 
   .hero-section {
-    padding-top: 6.25rem;
-    padding-left: 6%;
-    padding-right: 6%;
-    background-position: center, center, center, center; /* no mobile centraliza a foto */
+    min-height: 85vh; /* Alterado: Diminui a altura total para a seção não ficar gigante no mobile */
+    padding-top: 6rem;
+    padding-bottom: 3rem; /* Alterado: Ajuste do calço para caber melhor na tela */
+    padding-left: 4%; 
+    padding-right: 4%;
+    background-position: center, center, center, center;
   }
 
   .hero-badge {
@@ -577,9 +567,9 @@ main {
   }
 
   .hero-title {
-    font-size: 2.15rem;
-    line-height: 1.15;
-    margin-bottom: 1rem;
+    font-size: 1.85rem; 
+    line-height: 1.35; 
+    margin-bottom: 1.25rem; 
   }
 
   .hero-subtitle {
@@ -588,13 +578,21 @@ main {
     margin-bottom: 1.6rem;
   }
 
-  .hero-buttons { width: 100%; }
+  .hero-buttons { 
+    width: 100%; 
+    margin-top: 2rem; /* Alterado: Empurra especificamente os botões mais para baixo */
+  }
 
   .btn-gold,
   .btn-outline {
     width: 100%;
     max-width: 420px;
     padding: 0.95rem 1.2rem;
+  }
+
+  /* Trava para o botão do WhatsApp não vazar no mobile */
+  .whatsapp-float-container {
+    right: 8% !important; 
   }
 }
 
@@ -617,15 +615,4 @@ main {
   }
 
   .contact-card { padding: 1.5rem; }
-
-  /* WhatsApp flutuante menor */
-  a[aria-label="Abrir WhatsApp"] {
-    width: 52px !important;
-    height: 52px !important;
-  }
-
-  /* popup do whatsapp menor */
-  [aria-label="Mensagem do WhatsApp"] {
-    width: 235px !important;
-  }
 }

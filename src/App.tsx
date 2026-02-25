@@ -53,7 +53,12 @@ function Header({
 }) {
   return (
     <header className="main-header">
-      <NavLink to="/" className="logo" style={{ textDecoration: 'none', color: 'inherit' }} onClick={() => setShowWppPopup(false)}>
+      <NavLink
+        to="/"
+        className="logo"
+        style={{ textDecoration: 'none', color: 'inherit' }}
+        onClick={() => setShowWppPopup(false)}
+      >
         STAR <span>LIMP</span>
       </NavLink>
 
@@ -69,7 +74,13 @@ function Header({
       )}
 
       {!isMobile && (
-        <a href={headerWppLink} className="btn-cta-header" target="_blank" rel="noopener noreferrer" onClick={() => setShowWppPopup(false)}>
+        <a
+          href={headerWppLink}
+          className="btn-cta-header"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setShowWppPopup(false)}
+        >
           FALAR COM ESPECIALISTA
         </a>
       )}
@@ -353,7 +364,6 @@ function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
           color: rgba(255,255,255,0.92);
         }
 
-        /* ✅ ÍCONES REAIS */
         .star-footer .star-footer-pill-ico{
           width: 16px;
           height: 16px;
@@ -568,113 +578,122 @@ function WhatsAppFloating({
   setShowWppPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
-    <div
-      style={{
-        position: 'fixed',
-        right: 18,
-        bottom: 18,
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'flex-end',
-        gap: 12,
-      }}
-    >
-      {showWppPopup && (
-        <div
-          role="dialog"
-          aria-label="Mensagem do WhatsApp"
-          style={{
-            width: 270,
-            background: 'rgba(0,0,0,0.78)',
-            border: '1px solid rgba(212,175,55,0.35)',
-            backdropFilter: 'blur(18px)',
-            WebkitBackdropFilter: 'blur(18px)',
-            padding: '12px 12px 10px 12px',
-            color: 'white',
-            boxShadow: '0 18px 40px rgba(0,0,0,0.55)',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-            <div style={{ fontSize: 12, letterSpacing: 2, color: 'var(--color-gold)', textTransform: 'uppercase' }}>
-              Atendimento rápido
+    <>
+      <style>{`
+        .whatsapp-float-container {
+          position: fixed;
+          bottom: 18px;
+          right: 4%; /* Alinhamento mobile cravado com o header */
+          z-index: 9999;
+          display: flex;
+          align-items: flex-end;
+          gap: 12px;
+        }
+        @media (min-width: 768px) {
+          .whatsapp-float-container {
+            right: 5%; /* Alinhamento desktop cravado com o header */
+          }
+        }
+      `}</style>
+
+      <div className="whatsapp-float-container">
+        {showWppPopup && (
+          <div
+            role="dialog"
+            aria-label="Mensagem do WhatsApp"
+            style={{
+              width: 270,
+              background: 'rgba(0,0,0,0.78)',
+              border: '1px solid rgba(212,175,55,0.35)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
+              padding: '12px 12px 10px 12px',
+              color: 'white',
+              boxShadow: '0 18px 40px rgba(0,0,0,0.55)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
+              <div style={{ fontSize: 12, letterSpacing: 2, color: 'var(--color-gold)', textTransform: 'uppercase' }}>
+                Atendimento rápido
+              </div>
+
+              <button
+                onClick={() => setShowWppPopup(false)}
+                aria-label="Fechar"
+                style={{
+                  border: 'none',
+                  background: 'transparent',
+                  color: 'rgba(255,255,255,0.75)',
+                  cursor: 'pointer',
+                  fontSize: 16,
+                  lineHeight: 1,
+                  padding: 2,
+                }}
+              >
+                ×
+              </button>
             </div>
 
-            <button
-              onClick={() => setShowWppPopup(false)}
-              aria-label="Fechar"
-              style={{
-                border: 'none',
-                background: 'transparent',
-                color: 'rgba(255,255,255,0.75)',
-                cursor: 'pointer',
-                fontSize: 16,
-                lineHeight: 1,
-                padding: 2,
-              }}
-            >
-              ×
-            </button>
-          </div>
+            <div style={{ marginTop: 8, fontSize: 13, color: 'rgba(229,231,235,0.85)', lineHeight: 1.5 }}>
+              Quer um orçamento agora? Clique no WhatsApp e fale com um especialista.
+            </div>
 
-          <div style={{ marginTop: 8, fontSize: 13, color: 'rgba(229,231,235,0.85)', lineHeight: 1.5 }}>
-            Quer um orçamento agora? Clique no WhatsApp e fale com um especialista.
+            <div style={{ marginTop: 10 }}>
+              <a
+                href={headerWppLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setShowWppPopup(false)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%',
+                  padding: '10px 12px',
+                  textDecoration: 'none',
+                  textTransform: 'uppercase',
+                  letterSpacing: 2,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: 'black',
+                  background: 'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
+                }}
+              >
+                CHAMAR NO WHATSAPP
+              </a>
+            </div>
           </div>
+        )}
 
-          <div style={{ marginTop: 10 }}>
-            <a
-              href={headerWppLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setShowWppPopup(false)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                padding: '10px 12px',
-                textDecoration: 'none',
-                textTransform: 'uppercase',
-                letterSpacing: 2,
-                fontSize: 11,
-                fontWeight: 700,
-                color: 'black',
-                background: 'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
-              }}
-            >
-              CHAMAR NO WHATSAPP
-            </a>
-          </div>
-        </div>
-      )}
-
-      <a
-        href={headerWppLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Abrir WhatsApp"
-        title="Falar no WhatsApp"
-        style={{
-          width: 58,
-          height: 58,
-          borderRadius: 999,
-          background: 'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textDecoration: 'none',
-          boxShadow: '0 18px 40px rgba(0,0,0,0.55)',
-          border: '1px solid rgba(0,0,0,0.25)',
-        }}
-        onClick={() => setShowWppPopup(false)}
-      >
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path
-            d="M20.52 3.48A11.9 11.9 0 0 0 12.06 0C5.46 0 .1 5.36.1 11.96c0 2.1.55 4.15 1.6 5.96L0 24l6.25-1.64a11.9 11.9 0 0 0 5.81 1.49h.01c6.6 0 11.96-5.36 11.96-11.96 0-3.2-1.25-6.2-3.51-8.41Zm-8.45 18.37h-.01a9.93 9.93 0 0 1-5.06-1.39l-.36-.22-3.71.97.99-3.62-.24-.37a9.9 9.9 0 0 1-1.52-5.26C2.16 6.46 6.56 2.06 12.07 2.06c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.5-4.4 9.9-9.89 9.9Zm5.76-7.4c-.31-.16-1.82-.9-2.1-1-.28-.1-.49-.16-.7.16-.2.31-.8 1-1 1.2-.18.2-.37.23-.68.08-.31-.16-1.3-.48-2.48-1.53-.92-.82-1.54-1.83-1.72-2.14-.18-.31-.02-.47.14-.63.14-.14.31-.37.47-.55.16-.18.2-.31.31-.52.1-.2.05-.39-.03-.55-.08-.16-.7-1.68-.96-2.3-.25-.6-.5-.52-.7-.52h-.6c-.2 0-.52.08-.8.39-.28.31-1.05 1.02-1.05 2.48 0 1.45 1.08 2.86 1.23 3.06.16.2 2.12 3.23 5.14 4.53.72.31 1.28.5 1.72.64.72.23 1.37.2 1.89.12.58-.09 1.82-.74 2.07-1.45.26-.71.26-1.31.18-1.45-.08-.13-.28-.2-.6-.36Z"
-            fill="rgba(0,0,0,0.85)"
-          />
-        </svg>
-      </a>
-    </div>
+        <a
+          href={headerWppLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Abrir WhatsApp"
+          title="Falar no WhatsApp"
+          style={{
+            width: 58,
+            height: 58,
+            borderRadius: 999,
+            background: 'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textDecoration: 'none',
+            boxShadow: '0 18px 40px rgba(0,0,0,0.55)',
+            border: '1px solid rgba(0,0,0,0.25)',
+          }}
+          onClick={() => setShowWppPopup(false)}
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+              d="M20.52 3.48A11.9 11.9 0 0 0 12.06 0C5.46 0 .1 5.36.1 11.96c0 2.1.55 4.15 1.6 5.96L0 24l6.25-1.64a11.9 11.9 0 0 0 5.81 1.49h.01c6.6 0 11.96-5.36 11.96-11.96 0-3.2-1.25-6.2-3.51-8.41Zm-8.45 18.37h-.01a9.93 9.93 0 0 1-5.06-1.39l-.36-.22-3.71.97.99-3.62-.24-.37a9.9 9.9 0 0 1-1.52-5.26C2.16 6.46 6.56 2.06 12.07 2.06c2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.5-4.4 9.9-9.89 9.9Zm5.76-7.4c-.31-.16-1.82-.9-2.1-1-.28-.1-.49-.16-.7.16-.2.31-.8 1-1 1.2-.18.2-.37.23-.68.08-.31-.16-1.3-.48-2.48-1.53-.92-.82-1.54-1.83-1.72-2.14-.18-.31-.02-.47.14-.63.14-.14.31-.37.47-.55.16-.18.2-.31.31-.52.1-.2.05-.39-.03-.55-.08-.16-.7-1.68-.96-2.3-.25-.6-.5-.52-.7-.52h-.6c-.2 0-.52.08-.8.39-.28.31-1.05 1.02-1.05 2.48 0 1.45 1.08 2.86 1.23 3.06.16.2 2.12 3.23 5.14 4.53.72.31 1.28.5 1.72.64.72.23 1.37.2 1.89.12.58-.09 1.82-.74 2.07-1.45.26-.71.26-1.31.18-1.45-.08-.13-.28-.2-.6-.36Z"
+              fill="rgba(0,0,0,0.85)"
+            />
+          </svg>
+        </a>
+      </div>
+    </>
   );
 }
 
@@ -718,12 +737,10 @@ function HomePage({
         )}
 
         <div className="hero-container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="hero-badge">EXCELÊNCIA EM CUIDADO EQUINO</div>
-
+          {/* AQUI ESTÁ A NOVA FRASE INICIAL */}
           <h1 className="hero-title">
-            STAR LIMP: O CUIDADO <br />
-            <span className="gold-text-gradient">PROFISSIONAL</span> QUE <br />
-            SEU EQUINO MERECE.
+            ELEVANDO O PADRÃO DO <br />
+            <span className="gold-text-gradient">CUIDADO EQUINO</span>.
           </h1>
 
           <p className="hero-subtitle">Higiene, Proteção, Brilho e Bem-Estar Animal em cada detalhe.</p>
@@ -898,7 +915,11 @@ function ProductsPage({
               <div key={p.id} className="product-card">
                 <div className="product-image-placeholder">
                   <span>
-                    {p.id === 'shampoo' ? 'Imagem do Shampoo' : p.id === 'repelente' ? 'Imagem do Repelente' : 'Imagem do Abrilhantador'}
+                    {p.id === 'shampoo'
+                      ? 'Imagem do Shampoo'
+                      : p.id === 'repelente'
+                        ? 'Imagem do Repelente'
+                        : 'Imagem do Abrilhantador'}
                   </span>
                 </div>
 
@@ -956,14 +977,17 @@ function AboutPage() {
             Sobre a <span className="gold-text-gradient">Marca</span>
           </h2>
           <p className="section-subtitle">
-            A STAR LIMP nasceu para elevar o padrão de higiene e bem-estar equino, unindo ingredientes selecionados, performance e cuidado em cada fórmula.
+            A STAR LIMP nasceu para elevar o padrão de higiene e bem-estar equino, unindo ingredientes selecionados, performance e
+            cuidado em cada fórmula.
           </p>
         </div>
 
         <div className="about-grid">
           <div className="about-card">
             <h3 className="about-title">Qualidade Premium</h3>
-            <p className="about-text">Desenvolvimento focado em resultados: limpeza eficaz, brilho e proteção, sem agredir pele e pelagem.</p>
+            <p className="about-text">
+              Desenvolvimento focado em resultados: limpeza eficaz, brilho e proteção, sem agredir pele e pelagem.
+            </p>
           </div>
 
           <div className="about-card">
@@ -1017,9 +1041,7 @@ function ContactPage({
           <h2 className="section-title">
             Fale com um <span className="gold-text-gradient">Especialista</span>
           </h2>
-          <p className="section-subtitle">
-            Escolha o canal e o assunto. A mensagem já vai pronta (orçamento, dúvidas, revenda e etc).
-          </p>
+          <p className="section-subtitle">Escolha o canal e o assunto. A mensagem já vai pronta (orçamento, dúvidas, revenda e etc).</p>
         </div>
 
         <div className="contact-card">
@@ -1071,7 +1093,15 @@ function ContactPage({
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: 12, alignItems: 'end' }}>
             <div style={{ gridColumn: 'span 12' }}>
-              <div style={{ color: 'rgba(229,231,235,0.7)', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 8 }}>
+              <div
+                style={{
+                  color: 'rgba(229,231,235,0.7)',
+                  fontSize: 11,
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  marginBottom: 8,
+                }}
+              >
                 Assunto
               </div>
 
@@ -1097,7 +1127,15 @@ function ContactPage({
             </div>
 
             <div style={{ gridColumn: 'span 6' }}>
-              <div style={{ color: 'rgba(229,231,235,0.7)', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 8 }}>
+              <div
+                style={{
+                  color: 'rgba(229,231,235,0.7)',
+                  fontSize: 11,
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  marginBottom: 8,
+                }}
+              >
                 Nome (opcional)
               </div>
               <input
@@ -1116,7 +1154,15 @@ function ContactPage({
             </div>
 
             <div style={{ gridColumn: 'span 6' }}>
-              <div style={{ color: 'rgba(229,231,235,0.7)', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 8 }}>
+              <div
+                style={{
+                  color: 'rgba(229,231,235,0.7)',
+                  fontSize: 11,
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  marginBottom: 8,
+                }}
+              >
                 Cidade/UF (opcional)
               </div>
               <input
@@ -1183,9 +1229,7 @@ function ContactPage({
                 padding: 14,
               }}
             >
-              {contactChannel === 'WHATSAPP'
-                ? whatsappMessageByTopic
-                : `Assunto: ${emailSubjectAndBody.subject}\n\n${emailSubjectAndBody.body}`}
+              {contactChannel === 'WHATSAPP' ? whatsappMessageByTopic : `Assunto: ${emailSubjectAndBody.subject}\n\n${emailSubjectAndBody.body}`}
             </div>
 
             <div className="contact-note" style={{ marginTop: 14 }}>
@@ -1215,8 +1259,7 @@ function SimpleLegalPage({ title }: { title: string }) {
           <div style={{ color: 'rgba(229,231,235,0.88)', lineHeight: 1.9, fontSize: 14 }}>
             <p>Este conteúdo é um placeholder premium. Substitua por seu texto real (LGPD/privacidade/termos).</p>
             <p>
-              Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de
-              atendimento.
+              Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de atendimento.
             </p>
           </div>
         </div>
@@ -1603,7 +1646,9 @@ function AppShell() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
-  const mainTopPadding = isMobile ? 86 : 96;
+  // Aqui é a mágica: Tira o espaçamento apenas na página inicial
+  const isHome = location.pathname === '/';
+  const mainTopPadding = isHome ? 0 : (isMobile ? 86 : 96);
 
   return (
     <div className="star-limp-site">
@@ -1641,7 +1686,12 @@ function AppShell() {
         }
       `}</style>
 
-      <Header isMobile={isMobile} headerWppLink={headerWppLink} setShowWppPopup={setShowWppPopup} onOpenMobileMenu={() => setMobileMenuOpen(true)} />
+      <Header
+        isMobile={isMobile}
+        headerWppLink={headerWppLink}
+        setShowWppPopup={setShowWppPopup}
+        onOpenMobileMenu={() => setMobileMenuOpen(true)}
+      />
 
       {isMobile && mobileMenuOpen && (
         <MobileMenu headerWppLink={headerWppLink} setShowWppPopup={setShowWppPopup} closeMobileMenu={closeMobileMenu} />
@@ -1661,7 +1711,10 @@ function AppShell() {
               />
             }
           />
-          <Route path="/produtos" element={<ProductsPage products={products} productWppLink={productWppLink} setShowWppPopup={setShowWppPopup} />} />
+          <Route
+            path="/produtos"
+            element={<ProductsPage products={products} productWppLink={productWppLink} setShowWppPopup={setShowWppPopup} />}
+          />
           <Route path="/sobre" element={<AboutPage />} />
           <Route
             path="/contato"
@@ -1697,7 +1750,7 @@ function AppShell() {
 
 export default function App() {
   return (
-    <HashRouter>
+    <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ScrollToTop />
       <AppShell />
     </HashRouter>

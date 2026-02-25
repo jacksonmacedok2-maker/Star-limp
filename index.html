@@ -36,6 +36,48 @@
       name="twitter:description"
       content="Produtos premium para higiene e bem-estar equino. Solicite orçamento pelo WhatsApp."
     />
+
+    <!-- ✅ SILENCIAR ERRO EXTERNO DE FETCH (preview/iframe) -->
+    <script>
+      (function () {
+        function shouldIgnore(msg) {
+          try {
+            var s = String(msg || "");
+            return (
+              s.indexOf("Cannot set property fetch") !== -1 ||
+              s.indexOf("Cannot set property 'fetch'") !== -1
+            );
+          } catch {
+            return false;
+          }
+        }
+
+        window.addEventListener(
+          "error",
+          function (e) {
+            if (shouldIgnore(e && e.message)) {
+              e.preventDefault();
+              e.stopImmediatePropagation && e.stopImmediatePropagation();
+              return false;
+            }
+          },
+          true
+        );
+
+        window.addEventListener(
+          "unhandledrejection",
+          function (e) {
+            var reason = e && e.reason;
+            if (shouldIgnore(reason && reason.message ? reason.message : reason)) {
+              e.preventDefault();
+              e.stopImmediatePropagation && e.stopImmediatePropagation();
+              return false;
+            }
+          },
+          true
+        );
+      })();
+    </script>
   </head>
 
   <body>
