@@ -494,6 +494,26 @@ main {
   font-size: 0.85rem;
 }
 
+
+/* =========================
+   Animação do Botão Flutuante (WhatsApp)
+   ========================= */
+@keyframes wpp-wobble {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  1%  { transform: scale(1.12) rotate(-12deg); }
+  2%  { transform: scale(1.12) rotate(12deg); }
+  3%  { transform: scale(1.12) rotate(-12deg); }
+  4%  { transform: scale(1.12) rotate(12deg); }
+  5%  { transform: scale(1) rotate(0deg); }
+}
+
+.whatsapp-float-container a[aria-label="Abrir WhatsApp"] {
+  animation: wpp-wobble 15s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+
 /* =========================
    DESKTOP: “sem sobras” e ritmo premium
    ========================= */
@@ -551,9 +571,9 @@ main {
   }
 
   .hero-section {
-    min-height: 85vh; /* Alterado: Diminui a altura total para a seção não ficar gigante no mobile */
+    min-height: 85vh; /* Diminui a altura total para a seção não ficar gigante no mobile */
     padding-top: 6rem;
-    padding-bottom: 3rem; /* Alterado: Ajuste do calço para caber melhor na tela */
+    padding-bottom: 3rem; /* Ajuste do calço para caber melhor na tela */
     padding-left: 4%; 
     padding-right: 4%;
     background-position: center, center, center, center;
@@ -580,7 +600,7 @@ main {
 
   .hero-buttons { 
     width: 100%; 
-    margin-top: 2rem; /* Alterado: Empurra especificamente os botões mais para baixo */
+    margin-top: 2rem; /* Empurra especificamente os botões mais para baixo */
   }
 
   .btn-gold,
