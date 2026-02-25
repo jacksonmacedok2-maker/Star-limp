@@ -8,6 +8,9 @@
   --color-gold: #d4af37;
   --color-gold-dark: #8a6d3b;
   --color-dark-bg: #0a0a0a;
+
+  /* largura premium no desktop (sem sobras gigantes) */
+  --container-max: 1160px;
 }
 
 * {
@@ -25,6 +28,15 @@ body {
   color: #e5e7eb;
   font-family: var(--font-sans);
   line-height: 1.625;
+}
+
+/* evita qualquer scroll lateral escondido (o “torto” no PC) */
+html,
+body,
+#root,
+.star-limp-site {
+  width: 100%;
+  overflow-x: hidden;
 }
 
 a {
@@ -131,7 +143,7 @@ h1, h2, h3, h4 {
 /* container do hero (você usa no App) */
 .hero-container {
   width: 100%;
-  max-width: 1100px;
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 6%;
 }
@@ -231,19 +243,24 @@ h1, h2, h3, h4 {
    PRODUTOS
    ========================= */
 .products-section {
-  padding: 6.5rem 5%;
+  padding: 6rem 5%;
   background: rgba(0, 0, 0, 0.55);
   position: relative;
 }
 
 .products-container {
-  max-width: 1100px;
+  max-width: var(--container-max);
   margin: 0 auto;
+}
+
+/* quando usar section-container dentro de products (rota nova), mantém a mesma largura */
+.products-section .section-container {
+  max-width: var(--container-max);
 }
 
 .products-header {
   text-align: center;
-  margin-bottom: 3.5rem;
+  margin-bottom: 3.2rem;
 }
 
 .products-title {
@@ -339,12 +356,17 @@ h1, h2, h3, h4 {
    SEÇÕES (Sobre / Contato)
    ========================= */
 .section-block {
-  padding: 6.5rem 5%;
+  padding: 6rem 5%;
   background: rgba(0, 0, 0, 0.20);
 }
 
+/* garante que as rotas (main > section-block) não criem “buraco” no PC */
+main {
+  display: block;
+}
+
 .section-container {
-  max-width: 1100px;
+  max-width: var(--container-max);
   margin: 0 auto;
 }
 
@@ -427,7 +449,7 @@ h1, h2, h3, h4 {
 }
 
 .footer-inner {
-  max-width: 1100px;
+  max-width: var(--container-max);
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
@@ -448,6 +470,24 @@ h1, h2, h3, h4 {
 .footer-copy {
   color: rgba(229, 231, 235, 0.55);
   font-size: 0.85rem;
+}
+
+/* =========================
+   DESKTOP: “sem sobras” e ritmo premium
+   ========================= */
+@media (min-width: 1100px) {
+  /* reduz a sensação de “buraco” no PC */
+  .products-section,
+  .section-block {
+    padding-top: 5.2rem;
+    padding-bottom: 5.2rem;
+  }
+
+  /* garante que o footer não fique “perdido” */
+  .site-footer {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
 }
 
 /* =========================
