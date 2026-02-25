@@ -3,6 +3,8 @@ import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-do
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
+const INSTAGRAM_HANDLE = 'star_limp_shampo';
+const INSTAGRAM_URL = `https://instagram.com/${INSTAGRAM_HANDLE}`;
 
 function buildWhatsAppLink(message: string) {
   return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
@@ -43,12 +45,7 @@ function Header({
 }) {
   return (
     <header className="main-header">
-      <NavLink
-        to="/"
-        className="logo"
-        style={{ textDecoration: 'none', color: 'inherit' }}
-        onClick={() => setShowWppPopup(false)}
-      >
+      <NavLink to="/" className="logo" style={{ textDecoration: 'none', color: 'inherit' }} onClick={() => setShowWppPopup(false)}>
         STAR <span>LIMP</span>
       </NavLink>
 
@@ -64,13 +61,7 @@ function Header({
       )}
 
       {!isMobile && (
-        <a
-          href={headerWppLink}
-          className="btn-cta-header"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => setShowWppPopup(false)}
-        >
+        <a href={headerWppLink} className="btn-cta-header" target="_blank" rel="noopener noreferrer" onClick={() => setShowWppPopup(false)}>
           FALAR COM ESPECIALISTA
         </a>
       )}
@@ -213,10 +204,7 @@ function MobileMenu({
             href={headerWppLink}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => {
-              setShowWppPopup(false);
-              closeMobileMenu();
-            }}
+            onClick={closeMobileMenu}
             style={{
               textDecoration: 'none',
               textTransform: 'uppercase',
@@ -241,22 +229,294 @@ function MobileMenu({
   );
 }
 
-function Footer() {
+function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="site-footer">
-      <div className="footer-inner">
-        <div className="footer-brand">
-          <span className="footer-logo">STAR</span> <span className="footer-gold">LIMP</span>
+    <footer
+      className="site-footer star-footer"
+      style={{
+        marginTop: 40,
+        borderTop: '1px solid rgba(255,255,255,0.08)',
+        background: 'linear-gradient(180deg, rgba(0,0,0,0.78), rgba(0,0,0,0.95))',
+      }}
+    >
+      <style>{`
+        .star-footer .star-footer-inner{
+          width: 100%;
+          max-width: 1160px;
+          margin: 0 auto;
+          padding: 40px 18px 18px 18px;
+        }
+
+        .star-footer .star-footer-grid{
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 26px;
+          align-items: start;
+        }
+
+        .star-footer .star-footer-col-title{
+          color: var(--color-gold);
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          font-size: 11px;
+          margin-bottom: 12px;
+        }
+
+        .star-footer .star-footer-links{
+          display: grid;
+          gap: 10px;
+        }
+
+        .star-footer a.star-footer-link{
+          text-decoration: none;
+          color: rgba(229,231,235,0.86);
+          font-size: 13px;
+          line-height: 1.55;
+          transition: color .18s ease, transform .18s ease, opacity .18s ease;
+          will-change: transform;
+        }
+
+        .star-footer a.star-footer-link:hover{
+          color: var(--color-gold);
+          transform: translateX(2px);
+        }
+
+        .star-footer a.star-footer-link:active{
+          opacity: 0.9;
+        }
+
+        .star-footer .star-footer-brand{
+          display: grid;
+          gap: 12px;
+        }
+
+        .star-footer .star-footer-pillrow{
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          margin-top: 2px;
+        }
+
+        .star-footer .star-footer-pill{
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 12px;
+          border-radius: 999px;
+          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.03);
+          text-decoration: none;
+          color: rgba(229,231,235,0.9);
+          font-size: 12px;
+          letter-spacing: 0.02em;
+          transition: border-color .18s ease, background .18s ease, color .18s ease;
+        }
+
+        .star-footer .star-footer-pill:hover{
+          border-color: rgba(212,175,55,0.32);
+          background: rgba(212,175,55,0.06);
+          color: rgba(255,255,255,0.92);
+        }
+
+        .star-footer .star-footer-pill-dot{
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          background: var(--color-gold);
+          box-shadow: 0 0 0 4px rgba(212,175,55,0.10);
+        }
+
+        .star-footer .star-footer-news-row{
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          flex-wrap: wrap;
+          margin-top: 12px;
+        }
+
+        .star-footer .star-footer-input{
+          flex: 1 1 220px;
+          min-width: 220px;
+          background: rgba(255,255,255,0.04);
+          color: rgba(229,231,235,0.92);
+          border: 1px solid rgba(255,255,255,0.12);
+          padding: 12px 12px;
+          outline: none;
+          border-radius: 12px;
+        }
+
+        .star-footer .star-footer-btn{
+          padding: 12px 14px;
+          border-radius: 12px;
+          border: 1px solid rgba(212,175,55,0.45);
+          background: rgba(212,175,55,0.12);
+          color: var(--color-gold);
+          letter-spacing: 0.18em;
+          font-size: 11px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: transform .18s ease, background .18s ease, border-color .18s ease;
+        }
+
+        .star-footer .star-footer-btn:hover{
+          transform: translateY(-1px);
+          border-color: rgba(212,175,55,0.60);
+          background: rgba(212,175,55,0.16);
+        }
+
+        .star-footer .star-footer-bottom{
+          margin-top: 22px;
+          border-top: 1px solid rgba(255,255,255,0.08);
+          padding-top: 14px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+          color: rgba(229,231,235,0.58);
+          font-size: 12px;
+        }
+
+        @media (min-width: 920px){
+          .star-footer .star-footer-grid{
+            grid-template-columns: 1.35fr 0.9fr 0.9fr 1.05fr;
+            gap: 34px;
+          }
+        }
+      `}</style>
+
+      <div className="star-footer-inner">
+        <div className="star-footer-grid">
+          <div className="star-footer-brand">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 999,
+                  border: '1px solid rgba(212,175,55,0.35)',
+                  background: 'rgba(212,175,55,0.06)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--color-gold)',
+                  fontFamily: 'var(--font-serif)',
+                  letterSpacing: 2,
+                }}
+                aria-hidden="true"
+              >
+                ★
+              </div>
+
+              <div style={{ fontFamily: 'var(--font-serif)', fontSize: 18, letterSpacing: 2, textTransform: 'uppercase' }}>
+                STAR <span style={{ color: 'var(--color-gold)' }}>LIMP</span>
+              </div>
+            </div>
+
+            <p style={{ marginTop: 2, color: 'rgba(229,231,235,0.74)', lineHeight: 1.7, fontSize: 13, maxWidth: 520 }}>
+              Higiene, proteção e brilho para equinos com padrão premium. Desenvolvido para rotina real em haras, centros de
+              treinamento e cuidadores exigentes.
+            </p>
+
+            <div className="star-footer-pillrow">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="star-footer-pill"
+                aria-label={`Abrir Instagram @${INSTAGRAM_HANDLE}`}
+                title={`Instagram @${INSTAGRAM_HANDLE}`}
+              >
+                <span className="star-footer-pill-dot" aria-hidden="true" />
+                Instagram @{INSTAGRAM_HANDLE}
+              </a>
+
+              <a
+                href={headerWppLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="star-footer-pill"
+                aria-label="Abrir WhatsApp"
+                title="WhatsApp"
+              >
+                <span className="star-footer-pill-dot" aria-hidden="true" />
+                WhatsApp
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <div className="star-footer-col-title">Institucional</div>
+            <div className="star-footer-links">
+              <NavLink to="/sobre" className="star-footer-link">
+                Sobre a Marca
+              </NavLink>
+              <NavLink to="/produtos" className="star-footer-link">
+                Produtos
+              </NavLink>
+              <NavLink to="/privacidade" className="star-footer-link">
+                Política de Privacidade
+              </NavLink>
+              <NavLink to="/termos" className="star-footer-link">
+                Termos de Uso
+              </NavLink>
+            </div>
+          </div>
+
+          <div>
+            <div className="star-footer-col-title">Suporte</div>
+            <div className="star-footer-links">
+              <NavLink to="/contato" className="star-footer-link">
+                Fale Conosco
+              </NavLink>
+              <a href={headerWppLink} target="_blank" rel="noopener noreferrer" className="star-footer-link">
+                Atendimento no WhatsApp
+              </a>
+              <a href={buildMailTo('STAR LIMP — Suporte', 'Olá! Vim pelo site e preciso de suporte.')} className="star-footer-link">
+                Enviar e-mail
+              </a>
+              <a
+                href={buildMailTo(
+                  'STAR LIMP — Quero ser revendedor',
+                  'Olá! Vim pelo site e tenho interesse em ser revendedor(a). Podem me enviar as condições?',
+                )}
+                className="star-footer-link"
+              >
+                Seja um Revendedor
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <div className="star-footer-col-title">Newsletter</div>
+            <div style={{ color: 'rgba(229,231,235,0.74)', fontSize: 13, lineHeight: 1.7 }}>
+              Receba lançamentos e novidades exclusivas no seu e-mail.
+            </div>
+
+            <div className="star-footer-news-row">
+              <input className="star-footer-input" placeholder="Seu e-mail" type="email" />
+              <button type="button" className="star-footer-btn" onClick={() => {}}>
+                OK
+              </button>
+            </div>
+
+            <div style={{ marginTop: 10, color: 'rgba(229,231,235,0.55)', fontSize: 11, lineHeight: 1.6 }}>
+              Ao enviar, você concorda em receber comunicações da STAR LIMP. (Sem spam.)
+            </div>
+          </div>
         </div>
-        <div className="footer-copy">
-          © {new Date().getFullYear()} STAR LIMP. Todos os direitos reservados. •{' '}
-          <NavLink to="/privacidade" style={{ color: 'inherit' }}>
-            Privacidade
-          </NavLink>{' '}
-          •{' '}
-          <NavLink to="/termos" style={{ color: 'inherit' }}>
-            Termos
-          </NavLink>
+
+        <div className="star-footer-bottom">
+          <div>© {year} STAR LIMP. Todos os direitos reservados.</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ opacity: 0.85 }}>Feito com</span>
+            <span aria-hidden="true" style={{ color: 'var(--color-gold)' }}>
+              ♥
+            </span>
+            <span style={{ opacity: 0.85 }}>para equinos.</span>
+          </div>
         </div>
       </div>
     </footer>
@@ -343,8 +603,7 @@ function WhatsAppFloating({
                 fontSize: 11,
                 fontWeight: 700,
                 color: 'black',
-                background:
-                  'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
+                background: 'linear-gradient(to right, var(--color-gold-dark), var(--color-gold), var(--color-gold-light))',
               }}
             >
               CHAMAR NO WHATSAPP
@@ -501,7 +760,7 @@ function ProductsPage({
   setShowWppPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
-    <section className="products-section" style={{ paddingTop: 110 }}>
+    <section className="products-section">
       <div className="section-container">
         <div className="products-header">
           <h2 className="products-title">
@@ -562,7 +821,7 @@ function ProductsPage({
 
 function AboutPage() {
   return (
-    <section className="section-block" style={{ paddingTop: 110 }}>
+    <section className="section-block">
       <div className="section-container">
         <div className="section-header">
           <h2 className="section-title">
@@ -576,9 +835,7 @@ function AboutPage() {
         <div className="about-grid">
           <div className="about-card">
             <h3 className="about-title">Qualidade Premium</h3>
-            <p className="about-text">
-              Desenvolvimento focado em resultados: limpeza eficaz, brilho e proteção, sem agredir pele e pelagem.
-            </p>
+            <p className="about-text">Desenvolvimento focado em resultados: limpeza eficaz, brilho e proteção, sem agredir pele e pelagem.</p>
           </div>
 
           <div className="about-card">
@@ -615,9 +872,7 @@ function ContactPage({
   contactChannel: ContactChannel;
   setContactChannel: React.Dispatch<React.SetStateAction<ContactChannel>>;
   contactTopic: 'ORCAMENTO' | 'DUVIDAS' | 'REVENDEDOR' | 'PARCERIA' | 'OUTROS';
-  setContactTopic: React.Dispatch<
-    React.SetStateAction<'ORCAMENTO' | 'DUVIDAS' | 'REVENDEDOR' | 'PARCERIA' | 'OUTROS'>
-  >;
+  setContactTopic: React.Dispatch<React.SetStateAction<'ORCAMENTO' | 'DUVIDAS' | 'REVENDEDOR' | 'PARCERIA' | 'OUTROS'>>;
   topics: { key: 'ORCAMENTO' | 'DUVIDAS' | 'REVENDEDOR' | 'PARCERIA' | 'OUTROS'; label: string }[];
   leadName: string;
   setLeadName: React.Dispatch<React.SetStateAction<string>>;
@@ -628,13 +883,15 @@ function ContactPage({
   setShowWppPopup: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
-    <section className="section-block" style={{ paddingTop: 110 }}>
+    <section className="section-block">
       <div className="section-container">
         <div className="section-header">
           <h2 className="section-title">
             Fale com um <span className="gold-text-gradient">Especialista</span>
           </h2>
-          <p className="section-subtitle">Escolha o canal e o assunto. A mensagem já vai pronta (orçamento, dúvidas, revenda e etc).</p>
+          <p className="section-subtitle">
+            Escolha o canal e o assunto. A mensagem já vai pronta (orçamento, dúvidas, revenda e etc).
+          </p>
         </div>
 
         <div className="contact-card">
@@ -658,10 +915,7 @@ function ContactPage({
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 fontSize: 11,
-                border:
-                  contactChannel === 'WHATSAPP'
-                    ? '1px solid rgba(212,175,55,0.55)'
-                    : '1px solid rgba(255,255,255,0.18)',
+                border: contactChannel === 'WHATSAPP' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'WHATSAPP' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'WHATSAPP' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
               }}
@@ -678,10 +932,7 @@ function ContactPage({
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 fontSize: 11,
-                border:
-                  contactChannel === 'EMAIL'
-                    ? '1px solid rgba(212,175,55,0.55)'
-                    : '1px solid rgba(255,255,255,0.18)',
+                border: contactChannel === 'EMAIL' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'EMAIL' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'EMAIL' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
               }}
@@ -780,7 +1031,16 @@ function ContactPage({
           </div>
 
           <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
-            <div style={{ color: 'rgba(229,231,235,0.7)', fontSize: 11, letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: 10, textAlign: 'center' }}>
+            <div
+              style={{
+                color: 'rgba(229,231,235,0.7)',
+                fontSize: 11,
+                letterSpacing: '0.25em',
+                textTransform: 'uppercase',
+                marginBottom: 10,
+                textAlign: 'center',
+              }}
+            >
               Prévia da mensagem
             </div>
 
@@ -812,7 +1072,7 @@ function ContactPage({
 
 function SimpleLegalPage({ title }: { title: string }) {
   return (
-    <section className="section-block" style={{ paddingTop: 110 }}>
+    <section className="section-block">
       <div className="section-container">
         <div className="section-header">
           <h2 className="section-title">
@@ -827,8 +1087,8 @@ function SimpleLegalPage({ title }: { title: string }) {
           <div style={{ color: 'rgba(229,231,235,0.88)', lineHeight: 1.9, fontSize: 14 }}>
             <p>Este conteúdo é um placeholder premium. Substitua por seu texto real (LGPD/privacidade/termos).</p>
             <p>
-              Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e
-              canal de atendimento.
+              Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de
+              atendimento.
             </p>
           </div>
         </div>
@@ -855,13 +1115,10 @@ function AppShell() {
   const lastTRef = useRef<number>(0);
   const frameGateRef = useRef<number>(0);
 
-  // ✅ NOVO: guarda o tamanho atual do canvas (pra não limpar/redimensionar a cada mousemove)
   const heroSizeRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 
   const [contactChannel, setContactChannel] = useState<ContactChannel>('WHATSAPP');
-  const [contactTopic, setContactTopic] = useState<'ORCAMENTO' | 'DUVIDAS' | 'REVENDEDOR' | 'PARCERIA' | 'OUTROS'>(
-    'ORCAMENTO',
-  );
+  const [contactTopic, setContactTopic] = useState<'ORCAMENTO' | 'DUVIDAS' | 'REVENDEDOR' | 'PARCERIA' | 'OUTROS'>('ORCAMENTO');
   const [leadName, setLeadName] = useState('');
   const [leadCity, setLeadCity] = useState('');
 
@@ -917,8 +1174,6 @@ function AppShell() {
     const h = Math.max(1, Math.floor(rect.height));
 
     const prev = heroSizeRef.current;
-
-    // ✅ Se o tamanho não mudou, NÃO limpa/redimensiona (isso remove o flicker)
     if (!forceClear && prev.w === w && prev.h === h) return;
 
     heroSizeRef.current = { w, h };
@@ -948,7 +1203,6 @@ function AppShell() {
       rafRef.current = null;
     }
 
-    // força limpar e atualizar size
     ensureHeroCanvasSize(true);
   };
 
@@ -966,7 +1220,6 @@ function AppShell() {
 
   const pushTrailPoint = (x: number, y: number, vx: number, vy: number) => {
     const t = trailRef.current;
-
     const speed = Math.min(1, Math.sqrt(vx * vx + vy * vy) / 22);
     const count = speed > 0.45 ? 2 : 1;
 
@@ -1012,15 +1265,11 @@ function AppShell() {
     const arr = trailRef.current;
     for (let i = arr.length - 1; i >= 0; i--) {
       const p = arr[i];
-
       p.x += p.vx * (60 * dt);
       p.y += p.vy * (60 * dt);
-
       p.vx *= 0.92;
       p.vy *= 0.92;
-
       p.life -= 1.25 * dt;
-
       if (p.life <= 0) arr.splice(i, 1);
     }
 
@@ -1030,7 +1279,6 @@ function AppShell() {
     for (let i = 0; i < arr.length; i++) {
       const p = arr[i];
       const a = Math.max(0, Math.min(1, p.life));
-
       const size = 52 + (1 - a) * 22;
 
       const vx = p.vx;
@@ -1109,7 +1357,6 @@ function AppShell() {
     const el = heroRef.current;
     if (!el) return;
 
-    // ✅ aqui NÃO limpa mais (só garante tamanho, sem flicker)
     ensureHeroCanvasSize(false);
 
     const r = el.getBoundingClientRect();
@@ -1194,15 +1441,13 @@ function AppShell() {
     return [
       {
         name: 'Shampoo Profissional',
-        desc:
-          'Limpeza profunda e brilho natural inigualável. Fórmula exclusiva enriquecida com óleo de citronela e óleo de coco.',
+        desc: 'Limpeza profunda e brilho natural inigualável. Fórmula exclusiva enriquecida com óleo de citronela e óleo de coco.',
         meta: 'Disponível em: 1L | 2L | 5L',
         metaShort: '1L | 2L | 5L',
       },
       {
         name: 'Repelente Profissional',
-        desc:
-          'Proteção de alta performance contra moscas e mosquitos. Garante o conforto e a tranquilidade que o animal precisa.',
+        desc: 'Proteção de alta performance contra moscas e mosquitos. Garante o conforto e a tranquilidade que o animal precisa.',
         meta: 'Volume: 500ml',
         metaShort: '500ml',
       },
@@ -1220,62 +1465,98 @@ function AppShell() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
+  const mainTopPadding = isMobile ? 86 : 96;
+
   return (
     <div className="star-limp-site">
-      <Header
-        isMobile={isMobile}
-        headerWppLink={headerWppLink}
-        setShowWppPopup={setShowWppPopup}
-        onOpenMobileMenu={() => setMobileMenuOpen(true)}
-      />
+      {/* AJUSTE PREMIUM DESKTOP (uma mudança): melhora margens/largura e remove “vazio gigante” no PC sem mexer no mobile */}
+      <style>{`
+        /* Evita largura “torta” e sobra lateral no desktop */
+        @media (min-width: 900px){
+          .star-limp-site main{
+            width: 100%;
+          }
+
+          /* A maioria das páginas usa section-container e section-block */
+          .star-limp-site .section-container{
+            max-width: 1160px;
+            margin: 0 auto;
+            padding-left: 22px;
+            padding-right: 22px;
+          }
+
+          /* Reduz altura sobrando entre seções no desktop */
+          .star-limp-site .section-block{
+            padding-top: 56px;
+            padding-bottom: 56px;
+          }
+
+          /* A “Experiência Premium” estava ficando com muito espaço embaixo */
+          .star-limp-site .section-header{
+            margin-bottom: 26px;
+          }
+
+          .star-limp-site .about-grid{
+            gap: 18px;
+          }
+        }
+
+        /* Em telas muito grandes, mantém premium sem ficar “perdido” */
+        @media (min-width: 1400px){
+          .star-limp-site .section-container{
+            max-width: 1240px;
+          }
+        }
+      `}</style>
+
+      <Header isMobile={isMobile} headerWppLink={headerWppLink} setShowWppPopup={setShowWppPopup} onOpenMobileMenu={() => setMobileMenuOpen(true)} />
 
       {isMobile && mobileMenuOpen && (
         <MobileMenu headerWppLink={headerWppLink} setShowWppPopup={setShowWppPopup} closeMobileMenu={closeMobileMenu} />
       )}
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              heroCanUseMouse={heroCanUseMouse}
-              heroRef={heroRef}
-              canvasRef={canvasRef}
-              onHeroMouseMove={onHeroMouseMove}
-              onHeroMouseLeave={onHeroMouseLeave}
-            />
-          }
-        />
-        <Route
-          path="/produtos"
-          element={<ProductsPage products={products} productWppLink={productWppLink} setShowWppPopup={setShowWppPopup} />}
-        />
-        <Route path="/sobre" element={<AboutPage />} />
-        <Route
-          path="/contato"
-          element={
-            <ContactPage
-              contactChannel={contactChannel}
-              setContactChannel={setContactChannel}
-              contactTopic={contactTopic}
-              setContactTopic={setContactTopic}
-              topics={topics}
-              leadName={leadName}
-              setLeadName={setLeadName}
-              leadCity={leadCity}
-              setLeadCity={setLeadCity}
-              whatsappMessageByTopic={whatsappMessageByTopic}
-              emailSubjectAndBody={emailSubjectAndBody}
-              setShowWppPopup={setShowWppPopup}
-            />
-          }
-        />
-        <Route path="/privacidade" element={<SimpleLegalPage title="Política de Privacidade" />} />
-        <Route path="/termos" element={<SimpleLegalPage title="Termos de Uso" />} />
-        <Route path="*" element={<SimpleLegalPage title="Página não encontrada" />} />
-      </Routes>
+      <main style={{ paddingTop: mainTopPadding }}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                heroCanUseMouse={heroCanUseMouse}
+                heroRef={heroRef}
+                canvasRef={canvasRef}
+                onHeroMouseMove={onHeroMouseMove}
+                onHeroMouseLeave={onHeroMouseLeave}
+              />
+            }
+          />
+          <Route path="/produtos" element={<ProductsPage products={products} productWppLink={productWppLink} setShowWppPopup={setShowWppPopup} />} />
+          <Route path="/sobre" element={<AboutPage />} />
+          <Route
+            path="/contato"
+            element={
+              <ContactPage
+                contactChannel={contactChannel}
+                setContactChannel={setContactChannel}
+                contactTopic={contactTopic}
+                setContactTopic={setContactTopic}
+                topics={topics}
+                leadName={leadName}
+                setLeadName={setLeadName}
+                leadCity={leadCity}
+                setLeadCity={setLeadCity}
+                whatsappMessageByTopic={whatsappMessageByTopic}
+                emailSubjectAndBody={emailSubjectAndBody}
+                setShowWppPopup={setShowWppPopup}
+              />
+            }
+          />
+          <Route path="/privacidade" element={<SimpleLegalPage title="Política de Privacidade" />} />
+          <Route path="/termos" element={<SimpleLegalPage title="Termos de Uso" />} />
+          <Route path="*" element={<SimpleLegalPage title="Página não encontrada" />} />
+        </Routes>
 
-      <Footer />
+        <SiteFooter headerWppLink={headerWppLink} />
+      </main>
 
       <WhatsAppFloating headerWppLink={headerWppLink} showWppPopup={showWppPopup} setShowWppPopup={setShowWppPopup} />
     </div>
