@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 
-// ✅ HERO IMAGE (Vite)
-import heroHorse from './assets/hero-horse-DSUKCTkd.webp';
+// ✅ HERO IMAGE (Vite / Hostinger-safe)
+// (usar URL resolvida pelo bundler evita problemas de base path/subpasta no Apache)
+const heroHorseUrl = new URL('./assets/hero-horse-DSUKCTkd.webp', import.meta.url).href;
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
@@ -732,7 +733,7 @@ function HomePage({
           overflow: 'hidden',
           // ✅ imagem por variável CSS (para permitir !important acima)
           // @ts-ignore
-          ['--hero-bg' as any]: `url(${heroHorse})`,
+          ['--hero-bg' as any]: `url("${heroHorseUrl}")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
