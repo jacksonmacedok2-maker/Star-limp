@@ -715,6 +715,13 @@ function HomePage({
 }) {
   return (
     <>
+      {/* ✅ FIX: força o background-image mesmo se algum CSS estiver sobrescrevendo com !important */}
+      <style>{`
+        .hero-section{
+          background-image: var(--hero-bg) !important;
+        }
+      `}</style>
+
       <section
         ref={(n) => (heroRef.current = n)}
         className="hero-section"
@@ -723,8 +730,9 @@ function HomePage({
         style={{
           position: 'relative',
           overflow: 'hidden',
-          // ✅ imagem de verdade (sem depender do nome hashado)
-          backgroundImage: `url(${heroHorse})`,
+          // ✅ imagem por variável CSS (para permitir !important acima)
+          // @ts-ignore
+          ['--hero-bg' as any]: `url(${heroHorse})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -939,8 +947,8 @@ function ProductsPage({
 
             return (
               <div key={p.id} className="product-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <div 
-                  className="product-image-placeholder" 
+                <div
+                  className="product-image-placeholder"
                   style={{ background: 'linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%)' }}
                 >
                   <span>
@@ -1223,7 +1231,11 @@ function ContactPage({
                 ENVIAR NO WHATSAPP
               </a>
             ) : (
-              <a className="btn-gold contact-btn" href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)} style={{ minWidth: 280 }}>
+              <a
+                className="btn-gold contact-btn"
+                href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)}
+                style={{ minWidth: 280 }}
+              >
                 ENVIAR E-MAIL
               </a>
             )}

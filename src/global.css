@@ -130,7 +130,7 @@ h1, h2, h3, h4 {
   overflow: hidden;
   background-color: #0a0a0a;
 
-  /* ✅ TROCA AQUI: agora é WEBP */
+  /* ✅ Imagem Hero WEBP do cavalo */
   background-image:
     linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
     radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
@@ -264,13 +264,14 @@ h1, h2, h3, h4 {
   color: transparent;
 }
 
+
 /* =========================
-   PRODUTOS
+   PRODUTOS (FUNDO LISO NORMAL)
    ========================= */
 .products-section {
   padding: 6rem 5%;
-  background: rgba(0, 0, 0, 0.55);
   position: relative;
+  background-color: #050505;
 }
 
 .products-container {
@@ -311,16 +312,20 @@ h1, h2, h3, h4 {
 }
 
 .product-card {
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 15, 15, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 2.5rem;
+  border-radius: 12px;
   text-align: center;
-  transition: border-color 0.35s ease, transform 0.35s ease;
+  transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.3s ease;
 }
 
 .product-card:hover {
-  border-color: rgba(212, 175, 55, 0.45);
-  transform: translateY(-2px);
+  border-color: rgba(212, 175, 55, 0.35);
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
 }
 
 .product-image-placeholder {
@@ -359,8 +364,8 @@ h1, h2, h3, h4 {
 }
 
 .product-meta {
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0.9rem 0;
   margin: 1.2rem 0 1.6rem 0;
   color: var(--color-gold);
@@ -377,11 +382,12 @@ h1, h2, h3, h4 {
 }
 
 /* =========================
-   SEÇÕES (Sobre / Contato)
+   SEÇÕES (Sobre / Contato - FUNDO LISO NORMAL)
    ========================= */
 .section-block {
   padding: 6rem 5%;
-  background: rgba(0, 0, 0, 0.20);
+  position: relative;
+  background-color: #080808;
 }
 
 main {
@@ -391,6 +397,8 @@ main {
 .section-container {
   max-width: var(--container-max);
   margin: 0 auto;
+  position: relative;
+  z-index: 1; 
 }
 
 .section-header {
@@ -415,16 +423,18 @@ main {
   line-height: 1.85;
 }
 
-/* Experiência Premium - Pilares (Sobre) */
+/* Experiência Premium - Pilares */
 .about-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 2rem; /* Aumentado para mais respiro */
+  gap: 2rem; 
 }
 
 .about-card {
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, rgba(20, 20, 20, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+  background: linear-gradient(145deg, rgba(25, 25, 25, 0.65) 0%, rgba(5, 5, 5, 0.8) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 2.5rem 2rem;
   border-radius: 12px;
   text-align: center;
@@ -453,7 +463,7 @@ main {
 .about-card:hover {
   transform: translateY(-6px);
   border-color: rgba(212, 175, 55, 0.35);
-  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6), 0 0 20px -5px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.8), 0 0 20px -5px rgba(212, 175, 55, 0.15);
 }
 
 .about-card:hover::before {
@@ -470,7 +480,7 @@ main {
 }
 
 .about-text {
-  color: rgba(229, 231, 235, 0.75);
+  color: rgba(229, 231, 235, 0.85);
   font-size: 0.95rem;
   line-height: 1.8;
   margin: 0;
@@ -479,8 +489,11 @@ main {
 
 /* Contato */
 .contact-card {
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  background: rgba(0, 0, 0, 0.30);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 15, 15, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
   padding: 2rem;
 }
 
@@ -502,7 +515,7 @@ main {
 .site-footer {
   padding: 2.6rem 5%;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(5, 5, 5, 0.95);
 }
 
 .footer-inner {
