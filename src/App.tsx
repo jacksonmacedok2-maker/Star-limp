@@ -865,9 +865,10 @@ function ProductsPage({
 
         <style>{`
           .product-meta-chooser{
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid rgba(255,255,255,0.10);
+            margin-top: auto;
+            padding-top: 18px;
+            margin-bottom: 24px; /* <--- O respiro que faltava para desencostar do botão! */
+            border-top: 1px solid rgba(255,255,255,0.08);
           }
 
           .product-meta-label{
@@ -875,45 +876,48 @@ function ProductsPage({
             align-items: center;
             justify-content: space-between;
             gap: 10px;
-            color: rgba(229,231,235,0.66);
-            font-size: 11px;
+            color: rgba(229,231,235,0.55);
+            font-size: 10px;
             letter-spacing: 0.28em;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
           }
 
           .product-vol-chips{
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            justify-content: center; /* Centralizado para ficar mais simétrico */
           }
 
           .product-chip{
             appearance: none;
-            border: 1px solid rgba(255,255,255,0.14);
-            background: rgba(255,255,255,0.03);
-            color: rgba(229,231,235,0.92);
-            padding: 10px 12px;
-            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(0,0,0,0.4);
+            color: rgba(229,231,235,0.8);
+            padding: 10px 16px;
+            border-radius: 6px; /* Design mais 'premium' e menos redondinho */
             cursor: pointer;
-            font-size: 12px;
-            letter-spacing: 0.08em;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            transition: transform .16s ease, border-color .16s ease, background .16s ease, color .16s ease;
+            transition: all .25s ease;
             user-select: none;
           }
 
           .product-chip:hover{
-            transform: translateY(-1px);
-            border-color: rgba(212,175,55,0.35);
-            background: rgba(212,175,55,0.06);
+            transform: translateY(-2px);
+            border-color: rgba(212,175,55,0.4);
+            background: rgba(212,175,55,0.05);
+            color: white;
           }
 
           .product-chip.is-selected{
-            border-color: rgba(212,175,55,0.62);
-            background: rgba(212,175,55,0.12);
+            border-color: var(--color-gold);
+            background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
             color: var(--color-gold);
-            box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
           }
 
           .product-chip:focus-visible{
@@ -924,7 +928,7 @@ function ProductsPage({
           @media (max-width: 520px){
             .product-chip{
               padding: 12px 14px;
-              font-size: 12px;
+              font-size: 11px;
             }
           }
         `}</style>
@@ -934,8 +938,11 @@ function ProductsPage({
             const selected = selectedById[p.id] ?? p.defaultVolume;
 
             return (
-              <div key={p.id} className="product-card">
-                <div className="product-image-placeholder">
+              <div key={p.id} className="product-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <div 
+                  className="product-image-placeholder" 
+                  style={{ background: 'linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%)' }}
+                >
                   <span>
                     {p.id === 'shampoo'
                       ? 'Imagem do Shampoo'
@@ -1272,13 +1279,17 @@ function SimpleLegalPage({ title }: { title: string }) {
           <h2 className="section-title">
             {title} <span className="gold-text-gradient">STAR LIMP</span>
           </h2>
-          <p className="section-subtitle">Página institucional (importante para “cara de site de verdade” e confiança). Você pode trocar o texto depois.</p>
+          <p className="section-subtitle">
+            Página institucional (importante para “cara de site de verdade” e confiança). Você pode trocar o texto depois.
+          </p>
         </div>
 
         <div className="contact-card" style={{ textAlign: 'left' }}>
           <div style={{ color: 'rgba(229,231,235,0.88)', lineHeight: 1.9, fontSize: 14 }}>
             <p>Este conteúdo é um placeholder premium. Substitua por seu texto real (LGPD/privacidade/termos).</p>
-            <p>Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de atendimento.</p>
+            <p>
+              Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de atendimento.
+            </p>
           </div>
         </div>
       </div>
@@ -1666,7 +1677,7 @@ function AppShell() {
 
   // Aqui é a mágica: Tira o espaçamento apenas na página inicial
   const isHome = location.pathname === '/';
-  const mainTopPadding = isHome ? 0 : isMobile ? 86 : 96;
+  const mainTopPadding = isHome ? 0 : (isMobile ? 86 : 96);
 
   return (
     <div className="star-limp-site">
