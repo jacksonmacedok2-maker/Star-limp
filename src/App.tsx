@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 
-// ✅ IMPORT DA IMAGEM (Vite): coloque o arquivo em src/assets/hero-horse.jpg
+// ✅ HERO IMAGE (Vite)
 import heroHorse from './assets/hero-horse.jpg';
 
 const WHATSAPP_PHONE = '5575999736047';
@@ -586,7 +586,7 @@ function WhatsAppFloating({
         .whatsapp-float-container {
           position: fixed;
           bottom: 18px;
-          right: 4%;
+          right: 4%; /* Alinhamento mobile cravado com o header */
           z-index: 9999;
           display: flex;
           align-items: flex-end;
@@ -594,7 +594,7 @@ function WhatsAppFloating({
         }
         @media (min-width: 768px) {
           .whatsapp-float-container {
-            right: 5%;
+            right: 5%; /* Alinhamento desktop cravado com o header */
           }
         }
       `}</style>
@@ -723,22 +723,21 @@ function HomePage({
         style={{
           position: 'relative',
           overflow: 'hidden',
-          // ✅ IMAGEM AQUI: não usa hash, usa import
+          // ✅ imagem de verdade (sem depender do nome hashado)
           backgroundImage: `url(${heroHorse})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }}
       >
-        {/* overlay escuro leve pra manter premium */}
+        {/* overlay para ficar premium */}
         <div
           aria-hidden="true"
           style={{
             position: 'absolute',
             inset: 0,
             zIndex: 0,
-            background:
-              'radial-gradient(1200px 700px at 70% 30%, rgba(0,0,0,0.25), rgba(0,0,0,0.75))',
+            background: 'radial-gradient(1200px 700px at 70% 30%, rgba(0,0,0,0.25), rgba(0,0,0,0.78))',
           }}
         />
 
@@ -760,6 +759,7 @@ function HomePage({
         )}
 
         <div className="hero-container" style={{ position: 'relative', zIndex: 2 }}>
+          {/* AQUI ESTÁ A NOVA FRASE INICIAL */}
           <h1 className="hero-title">
             ELEVANDO O PADRÃO DO <br />
             <span className="gold-text-gradient">CUIDADO EQUINO</span>.
@@ -1113,7 +1113,155 @@ function ContactPage({
             </button>
           </div>
 
-          {/* ... (restante do seu arquivo permanece igual) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: 12, alignItems: 'end' }}>
+            <div style={{ gridColumn: 'span 12' }}>
+              <div
+                style={{
+                  color: 'rgba(229,231,235,0.7)',
+                  fontSize: 11,
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  marginBottom: 8,
+                }}
+              >
+                Assunto
+              </div>
+
+              <select
+                value={contactTopic}
+                onChange={(e) => setContactTopic(e.target.value as any)}
+                style={{
+                  width: '100%',
+                  background: 'rgba(0,0,0,0.25)',
+                  color: 'rgba(229,231,235,0.92)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  padding: '12px 12px',
+                  letterSpacing: '0.04em',
+                  outline: 'none',
+                }}
+              >
+                {topics.map((t) => (
+                  <option key={t.key} value={t.key}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div style={{ gridColumn: 'span 6' }}>
+              <div
+                style={{
+                  color: 'rgba(229,231,235,0.7)',
+                  fontSize: 11,
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  marginBottom: 8,
+                }}
+              >
+                Nome (opcional)
+              </div>
+              <input
+                value={leadName}
+                onChange={(e) => setLeadName(e.target.value)}
+                placeholder="Seu nome"
+                style={{
+                  width: '100%',
+                  background: 'rgba(0,0,0,0.25)',
+                  color: 'rgba(229,231,235,0.92)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  padding: '12px 12px',
+                  outline: 'none',
+                }}
+              />
+            </div>
+
+            <div style={{ gridColumn: 'span 6' }}>
+              <div
+                style={{
+                  color: 'rgba(229,231,235,0.7)',
+                  fontSize: 11,
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  marginBottom: 8,
+                }}
+              >
+                Cidade/UF (opcional)
+              </div>
+              <input
+                value={leadCity}
+                onChange={(e) => setLeadCity(e.target.value)}
+                placeholder="Ex.: Feira de Santana/BA"
+                style={{
+                  width: '100%',
+                  background: 'rgba(0,0,0,0.25)',
+                  color: 'rgba(229,231,235,0.92)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  padding: '12px 12px',
+                  outline: 'none',
+                }}
+              />
+            </div>
+          </div>
+
+          <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+            {contactChannel === 'WHATSAPP' ? (
+              <a
+                className="btn-gold contact-btn"
+                href={buildWhatsAppLink(whatsappMessageByTopic)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setShowWppPopup(false)}
+                style={{ minWidth: 280 }}
+              >
+                ENVIAR NO WHATSAPP
+              </a>
+            ) : (
+              <a
+                className="btn-gold contact-btn"
+                href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)}
+                style={{ minWidth: 280 }}
+              >
+                ENVIAR E-MAIL
+              </a>
+            )}
+
+            <NavLink className="btn-outline contact-btn" to="/produtos">
+              VER PRODUTOS
+            </NavLink>
+          </div>
+
+          <div style={{ marginTop: 16, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
+            <div
+              style={{
+                color: 'rgba(229,231,235,0.7)',
+                fontSize: 11,
+                letterSpacing: '0.25em',
+                textTransform: 'uppercase',
+                marginBottom: 10,
+                textAlign: 'center',
+              }}
+            >
+              Prévia da mensagem
+            </div>
+
+            <div
+              style={{
+                whiteSpace: 'pre-wrap',
+                color: 'rgba(229,231,235,0.78)',
+                fontSize: 13,
+                lineHeight: 1.7,
+                background: 'rgba(0,0,0,0.22)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                padding: 14,
+              }}
+            >
+              {contactChannel === 'WHATSAPP' ? whatsappMessageByTopic : `Assunto: ${emailSubjectAndBody.subject}\n\n${emailSubjectAndBody.body}`}
+            </div>
+
+            <div className="contact-note" style={{ marginTop: 14 }}>
+              Atendimento: seg–sáb • Resposta rápida • Opções prontas (inclui revenda).
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1524,6 +1672,7 @@ function AppShell() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
+  // Aqui é a mágica: Tira o espaçamento apenas na página inicial
   const isHome = location.pathname === '/';
   const mainTopPadding = isHome ? 0 : isMobile ? 86 : 96;
 
