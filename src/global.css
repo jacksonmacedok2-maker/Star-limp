@@ -28,6 +28,10 @@ body {
   color: #e5e7eb;
   font-family: var(--font-sans);
   line-height: 1.625;
+  /* ✅ CORREÇÃO PARA O RODAPÉ COLAR NO FUNDO */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Garante que o corpo tenha pelo menos a altura da tela */
 }
 
 /* evita qualquer scroll lateral escondido (o “torto” no PC) */
@@ -390,8 +394,10 @@ h1, h2, h3, h4 {
   background-color: #080808;
 }
 
+/* ✅ CORREÇÃO PARA O CONTEÚDO EMPURRAR O RODAPÉ */
 main {
   display: block;
+  flex: 1; /* Faz o conteúdo principal crescer e ocupar o espaço vazio */
 }
 
 .section-container {
