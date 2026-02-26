@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 
 // ✅ HERO IMAGE (Vite / Hostinger-safe)
-// (usar URL resolvida pelo bundler evita problemas de base path/subpasta no Apache)
+// (URL resolvida pelo bundler: funciona em dev/preview e também no build)
 const heroHorseUrl = new URL('./assets/hero-horse-DSUKCTkd.webp', import.meta.url).href;
 
 const WHATSAPP_PHONE = '5575999736047';
@@ -715,116 +715,71 @@ function HomePage({
   onHeroMouseLeave: () => void;
 }) {
   return (
-    <>
-      <section
-        ref={(n) => (heroRef.current = n)}
-        className="hero-section"
-        onMouseMove={onHeroMouseMove}
-        onMouseLeave={onHeroMouseLeave}
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
+    <section
+      ref={(n) => (heroRef.current = n)}
+      className="hero-section"
+      onMouseMove={onHeroMouseMove}
+      onMouseLeave={onHeroMouseLeave}
+      style={{
+        position: 'relative',
+        overflow: 'hidden',
 
-          // ✅ FIX DEFINITIVO: background direto (sem CSS var + !important)
-          backgroundImage: `url("${heroHorseUrl}")`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+        // ✅ FIX DEFINITIVO: background direto (sem CSS var / sem !important)
+        backgroundImage: `url("${heroHorseUrl}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+
+        // fallback visual
+        backgroundColor: '#000',
+      }}
+    >
+      {/* overlay para ficar premium */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          background: 'radial-gradient(1200px 700px at 70% 30%, rgba(0,0,0,0.25), rgba(0,0,0,0.78))',
         }}
-      >
-        {/* overlay para ficar premium */}
-        <div
+      />
+
+      {heroCanUseMouse && (
+        <canvas
+          ref={(n) => (canvasRef.current = n)}
           aria-hidden="true"
           style={{
             position: 'absolute',
             inset: 0,
-            zIndex: 0,
-            background: 'radial-gradient(1200px 700px at 70% 30%, rgba(0,0,0,0.25), rgba(0,0,0,0.78))',
+            width: '100%',
+            height: '100%',
+            zIndex: 1,
+            pointerEvents: 'none',
+            mixBlendMode: 'screen',
+            opacity: 0.95,
           }}
         />
+      )}
 
-        {heroCanUseMouse && (
-          <canvas
-            ref={(n) => (canvasRef.current = n)}
-            aria-hidden="true"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: 1,
-              pointerEvents: 'none',
-              mixBlendMode: 'screen',
-              opacity: 0.95,
-            }}
-          />
-        )}
+      <div className="hero-container" style={{ position: 'relative', zIndex: 2 }}>
+        <h1 className="hero-title">
+          ELEVANDO O PADRÃO DO <br />
+          <span className="gold-text-gradient">CUIDADO EQUINO</span>.
+        </h1>
 
-        <div className="hero-container" style={{ position: 'relative', zIndex: 2 }}>
-          {/* AQUI ESTÁ A NOVA FRASE INICIAL */}
-          <h1 className="hero-title">
-            ELEVANDO O PADRÃO DO <br />
-            <span className="gold-text-gradient">CUIDADO EQUINO</span>.
-          </h1>
+        <p className="hero-subtitle">Higiene, Proteção, Brilho e Bem-Estar Animal em cada detalhe.</p>
 
-          <p className="hero-subtitle">Higiene, Proteção, Brilho e Bem-Estar Animal em cada detalhe.</p>
-
-          <div className="hero-buttons">
-            <NavLink to="/produtos" className="btn-gold">
-              CONHEÇA NOSSOS PRODUTOS
-            </NavLink>
-            <NavLink to="/sobre" className="btn-outline">
-              SOBRE A MARCA
-            </NavLink>
-          </div>
+        <div className="hero-buttons">
+          <NavLink to="/produtos" className="btn-gold">
+            CONHEÇA NOSSOS PRODUTOS
+          </NavLink>
+          <NavLink to="/sobre" className="btn-outline">
+            SOBRE A MARCA
+          </NavLink>
         </div>
-      </section>
-
-      <section className="section-block">
-        <div className="section-container">
-          <div className="section-header">
-            <h2 className="section-title">
-              Experiência <span className="gold-text-gradient">Premium</span>
-            </h2>
-            <p className="section-subtitle">
-              Navegue pelo site para ver detalhes da linha, informações da marca e canais de contato com mensagens prontas.
-            </p>
-          </div>
-
-          <div className="about-grid">
-            <div className="about-card">
-              <h3 className="about-title">Produtos</h3>
-              <p className="about-text">Conheça a linha e peça orçamento em 1 clique (WhatsApp com mensagem pronta).</p>
-              <div style={{ marginTop: 12 }}>
-                <NavLink to="/produtos" className="btn-outline" style={{ display: 'inline-flex' }}>
-                  Ver produtos
-                </NavLink>
-              </div>
-            </div>
-
-            <div className="about-card">
-              <h3 className="about-title">Marca</h3>
-              <p className="about-text">Entenda a proposta e o padrão de qualidade da STAR LIMP.</p>
-              <div style={{ marginTop: 12 }}>
-                <NavLink to="/sobre" className="btn-outline" style={{ display: 'inline-flex' }}>
-                  Sobre nós
-                </NavLink>
-              </div>
-            </div>
-
-            <div className="about-card">
-              <h3 className="about-title">Contato</h3>
-              <p className="about-text">WhatsApp e e-mail com assuntos prontos (inclui “quero ser revendedor”).</p>
-              <div style={{ marginTop: 12 }}>
-                <NavLink to="/contato" className="btn-outline" style={{ display: 'inline-flex' }}>
-                  Falar com especialista
-                </NavLink>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
 
@@ -869,7 +824,7 @@ function ProductsPage({
           .product-meta-chooser{
             margin-top: auto;
             padding-top: 18px;
-            margin-bottom: 24px; /* <--- O respiro que faltava para desencostar do botão! */
+            margin-bottom: 24px;
             border-top: 1px solid rgba(255,255,255,0.08);
           }
 
@@ -889,7 +844,7 @@ function ProductsPage({
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            justify-content: center; /* Centralizado para ficar mais simétrico */
+            justify-content: center;
           }
 
           .product-chip{
@@ -898,7 +853,7 @@ function ProductsPage({
             background: rgba(0,0,0,0.4);
             color: rgba(229,231,235,0.8);
             padding: 10px 16px;
-            border-radius: 6px; /* Design mais 'premium' e menos redondinho */
+            border-radius: 6px;
             cursor: pointer;
             font-size: 11px;
             font-weight: 600;
@@ -1016,16 +971,12 @@ function AboutPage() {
         <div className="about-grid">
           <div className="about-card">
             <h3 className="about-title">Qualidade Premium</h3>
-            <p className="about-text">
-              Desenvolvimento focado em resultados: limpeza eficaz, brilho e proteção, sem agredir pele e pelagem.
-            </p>
+            <p className="about-text">Desenvolvimento focado em resultados: limpeza eficaz, brilho e proteção, sem agredir pele e pelagem.</p>
           </div>
 
           <div className="about-card">
             <h3 className="about-title">Fórmulas Selecionadas</h3>
-            <p className="about-text">
-              Ingredientes como óleo de citronela e óleo de coco, pensados para conforto, maciez e performance no dia a dia.
-            </p>
+            <p className="about-text">Ingredientes como óleo de citronela e óleo de coco, pensados para conforto, maciez e performance no dia a dia.</p>
           </div>
 
           <div className="about-card">
@@ -1096,10 +1047,7 @@ function ContactPage({
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 fontSize: 11,
-                border:
-                  contactChannel === 'WHATSAPP'
-                    ? '1px solid rgba(212,175,55,0.55)'
-                    : '1px solid rgba(255,255,255,0.18)',
+                border: contactChannel === 'WHATSAPP' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'WHATSAPP' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'WHATSAPP' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
               }}
@@ -1116,8 +1064,7 @@ function ContactPage({
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 fontSize: 11,
-                border:
-                  contactChannel === 'EMAIL' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
+                border: contactChannel === 'EMAIL' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'EMAIL' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'EMAIL' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
               }}
@@ -1264,9 +1211,7 @@ function ContactPage({
                 padding: 14,
               }}
             >
-              {contactChannel === 'WHATSAPP'
-                ? whatsappMessageByTopic
-                : `Assunto: ${emailSubjectAndBody.subject}\n\n${emailSubjectAndBody.body}`}
+              {contactChannel === 'WHATSAPP' ? whatsappMessageByTopic : `Assunto: ${emailSubjectAndBody.subject}\n\n${emailSubjectAndBody.body}`}
             </div>
 
             <div className="contact-note" style={{ marginTop: 14 }}>
@@ -1287,17 +1232,13 @@ function SimpleLegalPage({ title }: { title: string }) {
           <h2 className="section-title">
             {title} <span className="gold-text-gradient">STAR LIMP</span>
           </h2>
-          <p className="section-subtitle">
-            Página institucional (importante para “cara de site de verdade” e confiança). Você pode trocar o texto depois.
-          </p>
+          <p className="section-subtitle">Página institucional (importante para “cara de site de verdade” e confiança). Você pode trocar o texto depois.</p>
         </div>
 
         <div className="contact-card" style={{ textAlign: 'left' }}>
           <div style={{ color: 'rgba(229,231,235,0.88)', lineHeight: 1.9, fontSize: 14 }}>
             <p>Este conteúdo é um placeholder premium. Substitua por seu texto real (LGPD/privacidade/termos).</p>
-            <p>
-              Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de atendimento.
-            </p>
+            <p>Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de atendimento.</p>
           </div>
         </div>
       </div>
@@ -1309,7 +1250,6 @@ function AppShell() {
   const location = useLocation();
 
   const [showWppPopup, setShowWppPopup] = useState(true);
-
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -1683,9 +1623,8 @@ function AppShell() {
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
-  // Aqui é a mágica: Tira o espaçamento apenas na página inicial
   const isHome = location.pathname === '/';
-  const mainTopPadding = isHome ? 0 : (isMobile ? 86 : 96);
+  const mainTopPadding = isHome ? 0 : isMobile ? 86 : 96;
 
   return (
     <div className="star-limp-site">
@@ -1739,19 +1678,62 @@ function AppShell() {
           <Route
             path="/"
             element={
-              <HomePage
-                heroCanUseMouse={heroCanUseMouse}
-                heroRef={heroRef}
-                canvasRef={canvasRef}
-                onHeroMouseMove={onHeroMouseMove}
-                onHeroMouseLeave={onHeroMouseLeave}
-              />
+              <>
+                <HomePage
+                  heroCanUseMouse={heroCanUseMouse}
+                  heroRef={heroRef}
+                  canvasRef={canvasRef}
+                  onHeroMouseMove={onHeroMouseMove}
+                  onHeroMouseLeave={onHeroMouseLeave}
+                />
+                <section className="section-block">
+                  <div className="section-container">
+                    <div className="section-header">
+                      <h2 className="section-title">
+                        Experiência <span className="gold-text-gradient">Premium</span>
+                      </h2>
+                      <p className="section-subtitle">
+                        Navegue pelo site para ver detalhes da linha, informações da marca e canais de contato com mensagens prontas.
+                      </p>
+                    </div>
+
+                    <div className="about-grid">
+                      <div className="about-card">
+                        <h3 className="about-title">Produtos</h3>
+                        <p className="about-text">Conheça a linha e peça orçamento em 1 clique (WhatsApp com mensagem pronta).</p>
+                        <div style={{ marginTop: 12 }}>
+                          <NavLink to="/produtos" className="btn-outline" style={{ display: 'inline-flex' }}>
+                            Ver produtos
+                          </NavLink>
+                        </div>
+                      </div>
+
+                      <div className="about-card">
+                        <h3 className="about-title">Marca</h3>
+                        <p className="about-text">Entenda a proposta e o padrão de qualidade da STAR LIMP.</p>
+                        <div style={{ marginTop: 12 }}>
+                          <NavLink to="/sobre" className="btn-outline" style={{ display: 'inline-flex' }}>
+                            Sobre nós
+                          </NavLink>
+                        </div>
+                      </div>
+
+                      <div className="about-card">
+                        <h3 className="about-title">Contato</h3>
+                        <p className="about-text">WhatsApp e e-mail com assuntos prontos (inclui “quero ser revendedor”).</p>
+                        <div style={{ marginTop: 12 }}>
+                          <NavLink to="/contato" className="btn-outline" style={{ display: 'inline-flex' }}>
+                            Falar com especialista
+                          </NavLink>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </>
             }
           />
-          <Route
-            path="/produtos"
-            element={<ProductsPage products={products} productWppLink={productWppLink} setShowWppPopup={setShowWppPopup} />}
-          />
+          <Route path="/produtos" element={<ProductsPage products={products} productWppLink={productWppLink} setShowWppPopup={setShowWppPopup} />} />
           <Route path="/sobre" element={<AboutPage />} />
           <Route
             path="/contato"
