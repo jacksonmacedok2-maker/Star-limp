@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 
 // ✅ HERO IMAGE (Vite)
-import heroHorse from './assets/hero-horse.jpg';
+import heroHorse from './assets/hero-horse-DSUKCTkd.webp';
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
@@ -1216,11 +1216,7 @@ function ContactPage({
                 ENVIAR NO WHATSAPP
               </a>
             ) : (
-              <a
-                className="btn-gold contact-btn"
-                href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)}
-                style={{ minWidth: 280 }}
-              >
+              <a className="btn-gold contact-btn" href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)} style={{ minWidth: 280 }}>
                 ENVIAR E-MAIL
               </a>
             )}
@@ -1276,17 +1272,13 @@ function SimpleLegalPage({ title }: { title: string }) {
           <h2 className="section-title">
             {title} <span className="gold-text-gradient">STAR LIMP</span>
           </h2>
-          <p className="section-subtitle">
-            Página institucional (importante para “cara de site de verdade” e confiança). Você pode trocar o texto depois.
-          </p>
+          <p className="section-subtitle">Página institucional (importante para “cara de site de verdade” e confiança). Você pode trocar o texto depois.</p>
         </div>
 
         <div className="contact-card" style={{ textAlign: 'left' }}>
           <div style={{ color: 'rgba(229,231,235,0.88)', lineHeight: 1.9, fontSize: 14 }}>
             <p>Este conteúdo é um placeholder premium. Substitua por seu texto real (LGPD/privacidade/termos).</p>
-            <p>
-              Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de atendimento.
-            </p>
+            <p>Recomendado incluir: coleta de dados (se houver), cookies (se houver), finalidade de contato, segurança e canal de atendimento.</p>
           </div>
         </div>
       </div>

@@ -130,11 +130,11 @@ h1, h2, h3, h4 {
   overflow: hidden;
   background-color: #0a0a0a;
 
-  /* Alterado: Caminho relativo padrão de volta para a pasta assets */
+  /* ✅ TROCA AQUI: agora é WEBP */
   background-image:
     linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
     radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
-    url("./assets/hero-horse.jpg"),
+    url("./assets/hero-horse-DSUKCTkd.webp"),
     radial-gradient(circle at 2px 2px, rgba(212,175,55,0.03) 1px, transparent 0);
 
   background-size: 100% 100%, 100% 100%, cover, 40px 40px;
@@ -495,7 +495,6 @@ main {
   font-size: 0.85rem;
 }
 
-
 /* =========================
    Animação do Botão Flutuante (WhatsApp)
    ========================= */
@@ -513,7 +512,6 @@ main {
   transform-origin: center;
   will-change: transform;
 }
-
 
 /* =========================
    DESKTOP: “sem sobras” e ritmo premium
@@ -575,7 +573,7 @@ main {
     min-height: 85vh; /* Diminui a altura total para a seção não ficar gigante no mobile */
     padding-top: 6rem;
     padding-bottom: 3rem; /* Ajuste do calço para caber melhor na tela */
-    padding-left: 4%; 
+    padding-left: 4%;
     padding-right: 4%;
     background-position: center, center, center, center;
   }
@@ -588,9 +586,9 @@ main {
   }
 
   .hero-title {
-    font-size: 1.85rem; 
-    line-height: 1.35; 
-    margin-bottom: 1.25rem; 
+    font-size: 1.85rem;
+    line-height: 1.35;
+    margin-bottom: 1.25rem;
   }
 
   .hero-subtitle {
@@ -599,8 +597,8 @@ main {
     margin-bottom: 1.6rem;
   }
 
-  .hero-buttons { 
-    width: 100%; 
+  .hero-buttons {
+    width: 100%;
     margin-top: 2rem; /* Empurra especificamente os botões mais para baixo */
   }
 
@@ -613,7 +611,7 @@ main {
 
   /* Trava para o botão do WhatsApp não vazar no mobile */
   .whatsapp-float-container {
-    right: 8% !important; 
+    right: 8% !important;
   }
 }
 
