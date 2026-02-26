@@ -716,13 +716,6 @@ function HomePage({
 }) {
   return (
     <>
-      {/* ✅ FIX: força o background-image mesmo se algum CSS estiver sobrescrevendo com !important */}
-      <style>{`
-        .hero-section{
-          background-image: var(--hero-bg) !important;
-        }
-      `}</style>
-
       <section
         ref={(n) => (heroRef.current = n)}
         className="hero-section"
@@ -731,9 +724,9 @@ function HomePage({
         style={{
           position: 'relative',
           overflow: 'hidden',
-          // ✅ imagem por variável CSS (para permitir !important acima)
-          // @ts-ignore
-          ['--hero-bg' as any]: `url("${heroHorseUrl}")`,
+
+          // ✅ FIX DEFINITIVO: background direto (sem CSS var + !important)
+          backgroundImage: `url("${heroHorseUrl}")`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -1103,7 +1096,10 @@ function ContactPage({
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 fontSize: 11,
-                border: contactChannel === 'WHATSAPP' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
+                border:
+                  contactChannel === 'WHATSAPP'
+                    ? '1px solid rgba(212,175,55,0.55)'
+                    : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'WHATSAPP' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'WHATSAPP' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
               }}
@@ -1120,7 +1116,8 @@ function ContactPage({
                 letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 fontSize: 11,
-                border: contactChannel === 'EMAIL' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
+                border:
+                  contactChannel === 'EMAIL' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'EMAIL' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'EMAIL' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
               }}
@@ -1232,11 +1229,7 @@ function ContactPage({
                 ENVIAR NO WHATSAPP
               </a>
             ) : (
-              <a
-                className="btn-gold contact-btn"
-                href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)}
-                style={{ minWidth: 280 }}
-              >
+              <a className="btn-gold contact-btn" href={buildMailTo(emailSubjectAndBody.subject, emailSubjectAndBody.body)} style={{ minWidth: 280 }}>
                 ENVIAR E-MAIL
               </a>
             )}
@@ -1271,7 +1264,9 @@ function ContactPage({
                 padding: 14,
               }}
             >
-              {contactChannel === 'WHATSAPP' ? whatsappMessageByTopic : `Assunto: ${emailSubjectAndBody.subject}\n\n${emailSubjectAndBody.body}`}
+              {contactChannel === 'WHATSAPP'
+                ? whatsappMessageByTopic
+                : `Assunto: ${emailSubjectAndBody.subject}\n\n${emailSubjectAndBody.body}`}
             </div>
 
             <div className="contact-note" style={{ marginTop: 14 }}>
