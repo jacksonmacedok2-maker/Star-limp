@@ -3,9 +3,9 @@ import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-do
 import { motion } from 'framer-motion';
 import { Shield, Sparkles, Feather } from 'lucide-react';
 
-// ✅ HERO IMAGE (Vite / Hostinger-safe)
-// Usando import direto para que o Vite processe o asset corretamente no build
-import heroHorseUrl from './assets/hero-horse-DSUKCTkd.webp';
+// ✅ HERO IMAGE (Hostinger-safe)
+// Arquivo está em /public, então o caminho correto é absoluto a partir da raiz do site
+const heroHorseUrl = '/hero-horse-DSUKCTkd.webp';
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
@@ -430,8 +430,8 @@ function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
           border-top: 1px solid rgba(255,255,255,0.08);
           padding-top: 14px;
           display: flex;
-          justify-content: space-between;
-          align-items: center;
+          justifyContent: space-between;
+          alignItems: center;
           gap: 12px;
           flex-wrap: wrap;
           color: rgba(229,231,235,0.58);
