@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { Shield, Sparkles, Feather } from 'lucide-react';
 
 // ✅ HERO IMAGE (Vite / Hostinger-safe)
-// (URL resolvida pelo bundler: funciona em dev/preview e também no build)
-const heroHorseUrl = new URL('./assets/hero-horse-DSUKCTkd.webp', import.meta.url).href;
+// Usando import direto para que o Vite processe o asset corretamente no build
+import heroHorseUrl from './assets/hero-horse-DSUKCTkd.webp';
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
@@ -955,11 +955,16 @@ function HomePage({
         position: 'relative',
         overflow: 'hidden',
 
-        // ✅ FIX DEFINITIVO: background direto (sem CSS var / sem !important)
-        backgroundImage: `url("${heroHorseUrl}")`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        // ✅ FIX DEFINITIVO: background direto com camadas (gradientes + imagem)
+        backgroundImage: `
+          linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
+          radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
+          url("${heroHorseUrl}"),
+          radial-gradient(circle at 2px 2px, rgba(212,175,55,0.03) 1px, transparent 0)
+        `,
+        backgroundSize: '100% 100%, 100% 100%, cover, 40px 40px',
+        backgroundPosition: 'center, center, right center, center',
+        backgroundRepeat: 'no-repeat, no-repeat, no-repeat, repeat',
 
         // fallback visual
         backgroundColor: '#000',
