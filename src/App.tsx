@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Shield, Sparkles, Feather } from 'lucide-react';
 
 // ✅ HERO IMAGE (Vite / Hostinger-safe)
 // (URL resolvida pelo bundler: funciona em dev/preview e também no build)
@@ -146,10 +148,14 @@ function MobileMenu({
   closeMobileMenu: () => void;
 }) {
   return (
-    <div
+    <motion.div
       role="dialog"
       aria-label="Menu"
       onClick={closeMobileMenu}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
       style={{
         position: 'fixed',
         inset: 0,
@@ -160,8 +166,12 @@ function MobileMenu({
         padding: 16,
       }}
     >
-      <div
+      <motion.div
         onClick={(e) => e.stopPropagation()}
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -20, opacity: 0 }}
+        transition={{ delay: 0.1, duration: 0.3, ease: 'easeOut' }}
         style={{
           marginTop: 10,
           marginLeft: 'auto',
@@ -247,8 +257,8 @@ function MobileMenu({
             Falar com especialista
           </a>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -546,7 +556,7 @@ function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
 
             <div className="star-footer-news-row">
               <input className="star-footer-input" placeholder="Seu e-mail" type="email" />
-              <button type="button" className="star-footer-btn" onClick={() => {}}>
+              <button type="button" className="star-footer-btn" onClick={() => { }}>
                 OK
               </button>
             </div>
@@ -701,6 +711,227 @@ function WhatsAppFloating({
   );
 }
 
+function PremiumMarquee() {
+  const words = ["Alta Performance", "•", "Padrão Ouro", "•", "Resultados Visíveis", "•", "Brilho e Proteção", "•"];
+
+  return (
+    <div style={{
+      width: '100%',
+      backgroundColor: '#030303',
+      borderTop: '1px solid rgba(212,175,55,0.15)',
+      borderBottom: '1px solid rgba(212,175,55,0.15)',
+      padding: '12px 0',
+      overflow: 'hidden',
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center'
+    }}>
+      <style>{`
+        @keyframes scrollMarquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .marquee-content {
+          display: flex;
+          white-space: nowrap;
+          animation: scrollMarquee 25s linear infinite;
+          will-change: transform;
+        }
+        .marquee-item {
+          color: rgba(212,175,55,0.7);
+          font-size: 0.75rem;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          margin: 0 2rem;
+        }
+      `}</style>
+      <div className="marquee-content">
+        {/* Renderizamos duas vezes para dar o efeito infinito */}
+        {[...words, ...words, ...words, ...words].map((w, i) => (
+          <span key={i} className="marquee-item">{w}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HomePillars() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.15 } }
+  };
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  };
+
+  const pillars = [
+    {
+      icon: <Shield size={32} strokeWidth={1} color="var(--color-gold)" />,
+      title: "Fórmulas Balanceadas",
+      desc: "Limpeza profunda sem irritações. Ingredientes rigorosamente selecionados para a saúde da pele equina."
+    },
+    {
+      icon: <Sparkles size={32} strokeWidth={1} color="var(--color-gold)" />,
+      title: "Proteção Constante",
+      desc: "Repelência duradoura contra moscas e carrapatos, garantindo foco e tranquilidade nos treinos."
+    },
+    {
+      icon: <Feather size={32} strokeWidth={1} color="var(--color-gold)" />,
+      title: "Brilho Indiscutível",
+      desc: "O padrão ouro em acabamento. Pelagem radiante, macia e desembaraçada já na primeira aplicação."
+    }
+  ];
+
+  return (
+    <section style={{ backgroundColor: '#030303', padding: '8rem 5%', position: 'relative' }}>
+      <div style={{ maxWidth: 'var(--container-max)', margin: '0 auto' }}>
+        <motion.div
+          style={{ textAlign: 'center', marginBottom: '5rem' }}
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 2.75rem)', color: 'white', letterSpacing: '0.05em', marginBottom: '1rem', fontWeight: 400 }}>
+            A Essência do <span className="gold-text-gradient">Cuidado Premium</span>
+          </h2>
+          <p style={{ color: 'rgba(229,231,235,0.6)', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto', lineHeight: 1.6 }}>
+            Alta performance e sofisticação em cada frasco. Soluções desenvolvidas para elevar o padrão estético e o bem-estar do seu cavalo.
+          </p>
+        </motion.div>
+
+        <motion.div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1.5rem',
+          }}
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          {pillars.map((pillar, i) => (
+            <SpotlightCard key={i} pillar={pillar} variants={itemVariants} />
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// Sub-componente mágico do Bento Grid (21st.dev style)
+function SpotlightCard({ pillar, variants }: any) {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!divRef.current || isFocused) return;
+    const div = divRef.current;
+    const rect = div.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    setOpacity(1);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    setOpacity(0);
+  };
+
+  const handleMouseEnter = () => setOpacity(1);
+  const handleMouseLeave = () => setOpacity(0);
+
+  return (
+    <motion.div variants={variants}>
+      <div
+        ref={divRef}
+        onMouseMove={handleMouseMove}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          overflow: 'hidden',
+          borderRadius: '24px',
+          border: '1px solid rgba(255,255,255,0.08)',
+          backgroundColor: '#0a0a0a',
+          padding: '2.5rem',
+          height: '100%',
+          boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)',
+          transition: 'all 0.3s ease',
+        }}
+        className="bento-spotlight-card"
+      >
+        {/* Camada luminosa do hover escondida atrás do conteúdo */}
+        <div
+          style={{
+            pointerEvents: 'none',
+            position: 'absolute',
+            inset: 0,
+            opacity: opacity,
+            transition: 'opacity 0.5s ease',
+            background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(212,175,55,0.08), transparent 40%)`
+          }}
+        />
+
+        {/* Borda Glow Externa que se move com o mouse */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: '-1px',
+            borderRadius: '24px',
+            pointerEvents: 'none',
+            zIndex: 1,
+            opacity: opacity,
+            background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(212,175,55,0.4), transparent 40%)`,
+            WebkitMaskImage: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+            WebkitMaskComposite: 'xor',
+            maskComposite: 'exclude',
+            padding: '1px' // espessura da borda falsa
+          }}
+        />
+
+        <div style={{
+          width: 56, height: 56, borderRadius: '16px', marginBottom: '2rem',
+          background: 'linear-gradient(135deg, rgba(30,30,30,0.8), rgba(10,10,10,1))',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.4)',
+          position: 'relative', zIndex: 2
+        }}>
+          {pillar.icon}
+        </div>
+
+        <h3 style={{ color: 'white', fontSize: '1.25rem', marginBottom: '1rem', fontFamily: 'var(--font-serif)', letterSpacing: '0.02em', position: 'relative', zIndex: 2 }}>
+          {pillar.title}
+        </h3>
+
+        <p style={{ color: 'rgba(229,231,235,0.55)', fontSize: '0.95rem', lineHeight: 1.6, position: 'relative', zIndex: 2 }}>
+          {pillar.desc}
+        </p>
+
+        <style>{`
+          .bento-spotlight-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212,175,55,0.2) !important;
+          }
+        `}</style>
+      </div>
+    </motion.div>
+  );
+}
+
 function HomePage({
   heroCanUseMouse,
   heroRef,
@@ -734,18 +965,7 @@ function HomePage({
         backgroundColor: '#000',
       }}
     >
-      {/* overlay para ficar premium */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 0,
-          background: 'radial-gradient(1200px 700px at 70% 30%, rgba(0,0,0,0.25), rgba(0,0,0,0.78))',
-        }}
-      />
-
-      {heroCanUseMouse && (
+      {heroCanUseMouse ? (
         <canvas
           ref={(n) => (canvasRef.current = n)}
           aria-hidden="true"
@@ -756,29 +976,67 @@ function HomePage({
             height: '100%',
             zIndex: 1,
             pointerEvents: 'none',
-            mixBlendMode: 'screen',
-            opacity: 0.95,
+            mixBlendMode: 'normal',
+            // O canvas em si já pinta uma máscara em rgba(3,3,3, 0.75 a 0.92)
+            opacity: 1,
+          }}
+        />
+      ) : (
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            background: 'radial-gradient(1200px 700px at 70% 30%, rgba(3,3,3,0.75), rgba(3,3,3,0.92))',
           }}
         />
       )}
 
-      <div className="hero-container" style={{ position: 'relative', zIndex: 2 }}>
+      <motion.div
+        className="hero-container"
+        style={{ position: 'relative', zIndex: 2 }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="hero-badge"
+        >
+          Padrão Ouro em Cuidados
+        </motion.div>
+
         <h1 className="hero-title">
           ELEVANDO O PADRÃO DO <br />
           <span className="gold-text-gradient">CUIDADO EQUINO</span>.
         </h1>
 
-        <p className="hero-subtitle">Higiene, Proteção, Brilho e Bem-Estar Animal em cada detalhe.</p>
+        <motion.p
+          className="hero-subtitle"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+        >
+          Higiene, Proteção, Brilho e Bem-Estar Animal em cada detalhe.
+        </motion.p>
 
-        <div className="hero-buttons">
+        <motion.div
+          className="hero-buttons"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+        >
           <NavLink to="/produtos" className="btn-gold">
             CONHEÇA NOSSOS PRODUTOS
           </NavLink>
           <NavLink to="/sobre" className="btn-outline">
             SOBRE A MARCA
           </NavLink>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
@@ -808,24 +1066,43 @@ function ProductsPage({
     setSelectedById((prev) => ({ ...prev, [id]: v }));
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  };
+
   return (
     <section className="products-section">
       <div className="section-container">
-        <div className="products-header">
+        <motion.div
+          className="products-header"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
           <h2 className="products-title">
             Nossa Linha <span className="gold-text-gradient">Premium</span>
           </h2>
           <p className="products-subtitle">
             Desenvolvidos com ingredientes selecionados para garantir o máximo de saúde, brilho e proteção para o seu cavalo.
           </p>
-        </div>
+        </motion.div>
 
         <style>{`
           .product-meta-chooser{
             margin-top: auto;
             padding-top: 18px;
             margin-bottom: 24px;
-            border-top: 1px solid rgba(255,255,255,0.08);
+            border-top: 1px solid rgba(255,255,255,0.05); /* Mais suave */
           }
 
           .product-meta-label{
@@ -890,12 +1167,24 @@ function ProductsPage({
           }
         `}</style>
 
-        <div className="products-grid">
+        <motion.div
+          className="products-grid"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+        >
           {products.map((p) => {
             const selected = selectedById[p.id] ?? p.defaultVolume;
 
             return (
-              <div key={p.id} className="product-card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <motion.div
+                key={p.id}
+                className="product-card"
+                variants={itemVariants}
+                whileHover={{ y: -6, boxShadow: "0 25px 45px rgba(0, 0, 0, 0.9)" }}
+                style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+              >
                 <div
                   className="product-image-placeholder"
                   style={{ background: 'linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%)' }}
@@ -945,20 +1234,39 @@ function ProductsPage({
                 >
                   SOLICITAR ORÇAMENTO
                 </a>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 }
 
 function AboutPage() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  };
+
   return (
     <section className="section-block">
       <div className="section-container">
-        <div className="section-header">
+        <motion.div
+          className="section-header"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
           <h2 className="section-title">
             Sobre a <span className="gold-text-gradient">Marca</span>
           </h2>
@@ -966,24 +1274,30 @@ function AboutPage() {
             A STAR LIMP nasceu para elevar o padrão de higiene e bem-estar equino, unindo ingredientes selecionados, performance e
             cuidado em cada fórmula.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="about-grid">
-          <div className="about-card">
+        <motion.div
+          className="about-grid"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          <motion.div className="about-card" variants={itemVariants}>
             <h3 className="about-title">Qualidade Premium</h3>
             <p className="about-text">Desenvolvimento focado em resultados: limpeza eficaz, brilho e proteção, sem agredir pele e pelagem.</p>
-          </div>
+          </motion.div>
 
-          <div className="about-card">
+          <motion.div className="about-card" variants={itemVariants}>
             <h3 className="about-title">Fórmulas Selecionadas</h3>
             <p className="about-text">Ingredientes como óleo de citronela e óleo de coco, pensados para conforto, maciez e performance no dia a dia.</p>
-          </div>
+          </motion.div>
 
-          <div className="about-card">
+          <motion.div className="about-card" variants={itemVariants}>
             <h3 className="about-title">Feito para Rotina Real</h3>
             <p className="about-text">Ideal para uso frequente em centros de treinamento, haras e cuidadores exigentes.</p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
@@ -1019,14 +1333,26 @@ function ContactPage({
   return (
     <section className="section-block">
       <div className="section-container">
-        <div className="section-header">
+        <motion.div
+          className="section-header"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
           <h2 className="section-title">
             Fale com um <span className="gold-text-gradient">Especialista</span>
           </h2>
           <p className="section-subtitle">Escolha o canal e o assunto. A mensagem já vai pronta (orçamento, dúvidas, revenda e etc).</p>
-        </div>
+        </motion.div>
 
-        <div className="contact-card">
+        <motion.div
+          className="contact-card"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           <div
             style={{
               display: 'flex',
@@ -1050,6 +1376,7 @@ function ContactPage({
                 border: contactChannel === 'WHATSAPP' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'WHATSAPP' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'WHATSAPP' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
+                transition: 'all 0.3s ease'
               }}
             >
               WhatsApp
@@ -1067,6 +1394,7 @@ function ContactPage({
                 border: contactChannel === 'EMAIL' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'EMAIL' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'EMAIL' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
+                transition: 'all 0.3s ease'
               }}
             >
               E-mail
@@ -1218,7 +1546,7 @@ function ContactPage({
               Atendimento: seg–sáb • Resposta rápida • Opções prontas (inclui revenda).
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -1257,8 +1585,8 @@ function AppShell() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
 
-  const trailRef = useRef<TrailPoint[]>([]);
-  const prevPointerRef = useRef<{ x: number; y: number } | null>(null);
+  const smoothPointerRef = useRef({ x: -1000, y: -1000 });
+  const targetPointerRef = useRef({ x: -1000, y: -1000 });
   const activeRef = useRef(false);
   const lastTRef = useRef<number>(0);
   const frameGateRef = useRef<number>(0);
@@ -1342,8 +1670,8 @@ function AppShell() {
 
   const hardStopAndClearHero = () => {
     activeRef.current = false;
-    prevPointerRef.current = null;
-    trailRef.current = [];
+    targetPointerRef.current = { x: -1000, y: -1000 };
+    smoothPointerRef.current = { x: -1000, y: -1000 };
     lastTRef.current = 0;
     frameGateRef.current = 0;
 
@@ -1367,31 +1695,12 @@ function AppShell() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, heroCanUseMouse]);
 
-  const pushTrailPoint = (x: number, y: number, vx: number, vy: number) => {
-    const t = trailRef.current;
-    const speed = Math.min(1, Math.sqrt(vx * vx + vy * vy) / 22);
-    const count = speed > 0.45 ? 2 : 1;
-
-    for (let i = 0; i < count; i++) {
-      t.push({
-        x,
-        y,
-        vx: vx * (0.6 + Math.random() * 0.35) + (Math.random() - 0.5) * 0.6,
-        vy: vy * (0.6 + Math.random() * 0.35) + (Math.random() - 0.5) * 0.6,
-        life: 1,
-      });
-    }
-
-    const max = 18;
-    if (t.length > max) t.splice(0, t.length - max);
-  };
-
   const drawHeroLight = (t: number) => {
     const c = canvasRef.current;
     const heroEl = heroRef.current;
     if (!c || !heroEl) return;
 
-    if (t - frameGateRef.current < 33) return;
+    if (t - frameGateRef.current < 20) return; // 50fps max para rodar suave
     frameGateRef.current = t;
 
     const ctx = c.getContext('2d');
@@ -1405,65 +1714,73 @@ function AppShell() {
     const dt = Math.min(0.05, (t - last) / 1000);
     lastTRef.current = t;
 
+    // 1. Limpar e colorir de preto a máscara escura
+    ctx.clearRect(0, 0, w, h);
     ctx.save();
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillStyle = `rgba(0,0,0,${activeRef.current ? 0.16 : 0.22})`;
+    ctx.globalCompositeOperation = 'source-over';
+
+    // Fumaça de fundo geral - escura porém suave (85% a 92%)
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, 'rgba(5,5,5,0.72)');
+    bgGrad.addColorStop(1, 'rgba(2,2,2,0.92)');
+    ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
     ctx.restore();
 
-    const arr = trailRef.current;
-    for (let i = arr.length - 1; i >= 0; i--) {
-      const p = arr[i];
-      p.x += p.vx * (60 * dt);
-      p.y += p.vy * (60 * dt);
-      p.vx *= 0.92;
-      p.vy *= 0.92;
-      p.life -= 1.25 * dt;
-      if (p.life <= 0) arr.splice(i, 1);
+    // Lerp (interpolação suave) da posição da luz até a posição real do mouse
+    if (activeRef.current) {
+      if (smoothPointerRef.current.x === -1000) {
+        smoothPointerRef.current = { ...targetPointerRef.current };
+      }
+      smoothPointerRef.current.x += (targetPointerRef.current.x - smoothPointerRef.current.x) * (8 * dt);
+      smoothPointerRef.current.y += (targetPointerRef.current.y - smoothPointerRef.current.y) * (8 * dt);
+    } else {
+      // Se saiu do canvas, some rápido e desliga
+      smoothPointerRef.current.x = -1000;
+      smoothPointerRef.current.y = -1000;
     }
 
-    ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
+    const { x, y } = smoothPointerRef.current;
 
-    for (let i = 0; i < arr.length; i++) {
-      const p = arr[i];
-      const a = Math.max(0, Math.min(1, p.life));
-      const size = 46 + (1 - a) * 18;
+    // Se estiver ativo e dentro da tela, "apagar a fumaça" e gerar a luz suave
+    if (x > -500 && y > -500 && activeRef.current) {
+      // 3. Modificador de máscara que cria um "buraco suave" que revela a foto linda de fundo
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
 
-      const vx = p.vx;
-      const vy = p.vy;
-      const mag = Math.max(1, Math.sqrt(vx * vx + vy * vy));
-      const nx = -vx / mag;
-      const ny = -vy / mag;
+      // Um super holofote gigantesco para "iluminar bastante o espaço", mas com degradê de fumaça
+      const sizeBase = 400; // Raio imenso e difuso
 
-      const offset = 16;
-      const cx = p.x + nx * offset;
-      const cy = p.y + ny * offset;
-
-      let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 1.9);
-      g.addColorStop(0, `rgba(212,175,55,${0.18 * a})`);
-      g.addColorStop(0.35, `rgba(212,175,55,${0.08 * a})`);
+      let g = ctx.createRadialGradient(x, y, 0, x, y, sizeBase);
+      // Remove 100% no meio revelando a imagem original, e vai reduzindo a fumaça sutilmente
+      g.addColorStop(0, `rgba(0,0,0,1)`);
+      g.addColorStop(0.3, `rgba(0,0,0,0.85)`);
+      g.addColorStop(0.7, `rgba(0,0,0,0.3)`);
       g.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(cx, cy, size * 1.9, 0, Math.PI * 2);
+      ctx.arc(x, y, sizeBase, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
 
-      g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
-      g.addColorStop(0, `rgba(255,235,160,${0.22 * a})`);
-      g.addColorStop(0.25, `rgba(212,175,55,${0.12 * a})`);
-      g.addColorStop(1, 'rgba(0,0,0,0)');
+      // 4. Tint de reflexo ouro/amarelo ultra sutil (para manter a vibe da marca Star Limp)
+      ctx.save();
+      ctx.globalCompositeOperation = 'source-over';
+      const tintRadius = 200;
+      let tintGrad = ctx.createRadialGradient(x, y, 0, x, y, tintRadius);
+      tintGrad.addColorStop(0, `rgba(255,220,130,0.18)`); // Apenas 18% de amarelo claro no meio
+      tintGrad.addColorStop(0.6, `rgba(212,175,55,0.06)`);
+      tintGrad.addColorStop(1, 'rgba(0,0,0,0)');
 
-      ctx.fillStyle = g;
+      ctx.fillStyle = tintGrad;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+      ctx.arc(x, y, tintRadius, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
     }
 
-    ctx.restore();
-
-    if (!activeRef.current && trailRef.current.length === 0) {
+    if (!activeRef.current) {
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
@@ -1512,20 +1829,23 @@ function AppShell() {
     const x = Math.max(0, Math.min(r.width, e.clientX - r.left));
     const y = Math.max(0, Math.min(r.height, e.clientY - r.top));
 
-    const prev = prevPointerRef.current;
-    const vx = prev ? x - prev.x : 0;
-    const vy = prev ? y - prev.y : 0;
+    targetPointerRef.current = { x, y };
 
-    prevPointerRef.current = { x, y };
-    activeRef.current = true;
+    if (!activeRef.current) {
+      activeRef.current = true;
+      // Para não teleportar do canto (0,0) ou (-1000,-1000) de uma vez
+      smoothPointerRef.current = { x, y };
+    }
 
-    pushTrailPoint(x, y, vx, vy);
     startHeroLoop();
   };
 
   const onHeroMouseLeave = () => {
     activeRef.current = false;
-    prevPointerRef.current = null;
+    // Opcional: Para uma fumaça que decresce/desaparece lentamente, não zeramos ainda o anim frame,
+    // ele vai se redesenhar uma última vez sem o spotlight.
+    targetPointerRef.current = { x: -1000, y: -1000 };
+    startHeroLoop();
   };
 
   const defaultMessage = useMemo(() => {
@@ -1686,6 +2006,8 @@ function AppShell() {
                   onHeroMouseMove={onHeroMouseMove}
                   onHeroMouseLeave={onHeroMouseLeave}
                 />
+                <PremiumMarquee />
+                <HomePillars />
                 <section className="section-block">
                   <div className="section-container">
                     <div className="section-header">
