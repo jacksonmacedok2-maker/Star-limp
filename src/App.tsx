@@ -10,10 +10,10 @@ const heroHorseUrl = '/hero-horse-DSUKCTkd.webp';
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
 const INSTAGRAM_HANDLE = 'star_limp_shampo';
-const INSTAGRAM_URL = `https://instagram.com/${INSTAGRAM_HANDLE}`;
+const INSTAGRAM_URL = `https://instagram.com/ ${INSTAGRAM_HANDLE}`;
 
 function buildWhatsAppLink(message: string) {
-  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/ ${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 }
 
 function buildMailTo(subject: string, body: string) {
@@ -1565,7 +1565,7 @@ function SimpleLegalPage({ title }: { title: string }) {
           <h2 className="section-title">
             {title} <span className="gold-text-gradient">STAR LIMP</span>
           </h2>
-          <p className="section-subtitle">Página institucional (importante para “cara de site de verdade” e confiança). Você pode trocar o texto depois.</p>
+          <p className="section-subtitle">Página institucional (importante para "cara de site de verdade" e confiança). Você pode trocar o texto depois.</p>
         </div>
 
         <div className="contact-card" style={{ textAlign: 'left' }}>
@@ -1753,14 +1753,14 @@ function AppShell() {
       ctx.save();
       ctx.globalCompositeOperation = 'destination-out';
 
-      // Um super holofote gigantesco para "iluminar bastante o espaço", mas com degradê de fumaça
-      const sizeBase = 400; // Raio imenso e difuso
+      // 🔥 AUMENTADO: Raio maior e opacidades mais altas para luz mais forte
+      const sizeBase = 650; // Era 400, agora 650 (maior alcance)
 
       let g = ctx.createRadialGradient(x, y, 0, x, y, sizeBase);
       // Remove 100% no meio revelando a imagem original, e vai reduzindo a fumaça sutilmente
       g.addColorStop(0, `rgba(0,0,0,1)`);
-      g.addColorStop(0.3, `rgba(0,0,0,0.85)`);
-      g.addColorStop(0.7, `rgba(0,0,0,0.3)`);
+      g.addColorStop(0.2, `rgba(0,0,0,0.95)`); // Mais opaco no centro
+      g.addColorStop(0.5, `rgba(0,0,0,0.6)`);  // Era 0.3, agora 0.6 (mais transparente = mais luz)
       g.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.fillStyle = g;
@@ -1769,13 +1769,13 @@ function AppShell() {
       ctx.fill();
       ctx.restore();
 
-      // 4. Tint de reflexo ouro/amarelo ultra sutil (para manter a vibe da marca Star Limp)
+      // 4. Tint de reflexo ouro/amarelo mais intenso
       ctx.save();
       ctx.globalCompositeOperation = 'source-over';
-      const tintRadius = 200;
+      const tintRadius = 350; // Era 200, agora 350 (maior)
       let tintGrad = ctx.createRadialGradient(x, y, 0, x, y, tintRadius);
-      tintGrad.addColorStop(0, `rgba(255,220,130,0.18)`); // Apenas 18% de amarelo claro no meio
-      tintGrad.addColorStop(0.6, `rgba(212,175,55,0.06)`);
+      tintGrad.addColorStop(0, `rgba(255,220,130,0.35)`); // Era 0.18, agora 0.35 (dobro de intensidade)
+      tintGrad.addColorStop(0.5, `rgba(212,175,55,0.15)`); // Era 0.06, agora 0.15
       tintGrad.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.fillStyle = tintGrad;
@@ -2047,7 +2047,7 @@ function AppShell() {
 
                       <div className="about-card">
                         <h3 className="about-title">Contato</h3>
-                        <p className="about-text">WhatsApp e e-mail com assuntos prontos (inclui “quero ser revendedor”).</p>
+                        <p className="about-text">WhatsApp e e-mail com assuntos prontos (inclui "quero ser revendedor").</p>
                         <div style={{ marginTop: 12 }}>
                           <NavLink to="/contato" className="btn-outline" style={{ display: 'inline-flex' }}>
                             Falar com especialista
