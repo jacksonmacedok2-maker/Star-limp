@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { Shield, Sparkles, Feather } from 'lucide-react';
 
 // ✅ HERO IMAGE (Hostinger-safe)
-// Usando import.meta.env.BASE_URL para garantir que o caminho funcione em qualquer subpasta
-const heroHorseUrl = `${import.meta.env.BASE_URL}hero-horse-DSUKCTkd.webp`;
+// Importando diretamente para que o Vite gerencie o caminho e o hash do arquivo
+import heroHorseUrl from './assets/hero-horse-DSUKCTkd.webp';
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
