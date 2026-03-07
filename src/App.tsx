@@ -712,20 +712,22 @@ function WhatsAppFloating({
 }
 
 function PremiumMarquee() {
-  const words = ["Alta Performance", "•", "Padrão Ouro", "•", "Resultados Visíveis", "•", "Brilho e Proteção", "•"];
+  const words = ['Alta Performance', '•', 'Padrão Ouro', '•', 'Resultados Visíveis', '•', 'Brilho e Proteção', '•'];
 
   return (
-    <div style={{
-      width: '100%',
-      backgroundColor: '#030303',
-      borderTop: '1px solid rgba(212,175,55,0.15)',
-      borderBottom: '1px solid rgba(212,175,55,0.15)',
-      padding: '12px 0',
-      overflow: 'hidden',
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center'
-    }}>
+    <div
+      style={{
+        width: '100%',
+        backgroundColor: '#030303',
+        borderTop: '1px solid rgba(212,175,55,0.15)',
+        borderBottom: '1px solid rgba(212,175,55,0.15)',
+        padding: '12px 0',
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
       <style>{`
         @keyframes scrollMarquee {
           0% { transform: translateX(0); }
@@ -746,9 +748,10 @@ function PremiumMarquee() {
         }
       `}</style>
       <div className="marquee-content">
-        {/* Renderizamos duas vezes para dar o efeito infinito */}
         {[...words, ...words, ...words, ...words].map((w, i) => (
-          <span key={i} className="marquee-item">{w}</span>
+          <span key={i} className="marquee-item">
+            {w}
+          </span>
         ))}
       </div>
     </div>
@@ -758,29 +761,29 @@ function PremiumMarquee() {
 function HomePillars() {
   const containerVariants = {
     hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.15 } }
+    show: { opacity: 1, transition: { staggerChildren: 0.15 } },
   };
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
   };
 
   const pillars = [
     {
       icon: <Shield size={32} strokeWidth={1} color="var(--color-gold)" />,
-      title: "Fórmulas Balanceadas",
-      desc: "Limpeza profunda sem irritações. Ingredientes rigorosamente selecionados para a saúde da pele equina."
+      title: 'Fórmulas Balanceadas',
+      desc: 'Limpeza profunda sem irritações. Ingredientes rigorosamente selecionados para a saúde da pele equina.',
     },
     {
       icon: <Sparkles size={32} strokeWidth={1} color="var(--color-gold)" />,
-      title: "Proteção Constante",
-      desc: "Repelência duradoura contra moscas e carrapatos, garantindo foco e tranquilidade nos treinos."
+      title: 'Proteção Constante',
+      desc: 'Repelência duradoura contra moscas e carrapatos, garantindo foco e tranquilidade nos treinos.',
     },
     {
       icon: <Feather size={32} strokeWidth={1} color="var(--color-gold)" />,
-      title: "Brilho Indiscutível",
-      desc: "O padrão ouro em acabamento. Pelagem radiante, macia e desembaraçada já na primeira aplicação."
-    }
+      title: 'Brilho Indiscutível',
+      desc: 'O padrão ouro em acabamento. Pelagem radiante, macia e desembaraçada já na primeira aplicação.',
+    },
   ];
 
   return (
@@ -790,14 +793,24 @@ function HomePillars() {
           style={{ textAlign: 'center', marginBottom: '5rem' }}
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2rem, 4vw, 2.75rem)', color: 'white', letterSpacing: '0.05em', marginBottom: '1rem', fontWeight: 400 }}>
+          <h2
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 'clamp(2rem, 4vw, 2.75rem)',
+              color: 'white',
+              letterSpacing: '0.05em',
+              marginBottom: '1rem',
+              fontWeight: 400,
+            }}
+          >
             A Essência do <span className="gold-text-gradient">Cuidado Premium</span>
           </h2>
           <p style={{ color: 'rgba(229,231,235,0.6)', fontSize: '1.05rem', maxWidth: '650px', margin: '0 auto', lineHeight: 1.6 }}>
-            Alta performance e sofisticação em cada frasco. Soluções desenvolvidas para elevar o padrão estético e o bem-estar do seu cavalo.
+            Alta performance e sofisticação em cada frasco. Soluções desenvolvidas para elevar o padrão estético e o bem-estar do seu
+            cavalo.
           </p>
         </motion.div>
 
@@ -810,7 +823,7 @@ function HomePillars() {
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true, margin: '-50px' }}
         >
           {pillars.map((pillar, i) => (
             <SpotlightCard key={i} pillar={pillar} variants={itemVariants} />
@@ -882,7 +895,7 @@ function SpotlightCard({ pillar, variants }: any) {
             inset: 0,
             opacity: opacity,
             transition: 'opacity 0.5s ease',
-            background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(212,175,55,0.08), transparent 40%)`
+            background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(212,175,55,0.08), transparent 40%)`,
           }}
         />
 
@@ -899,21 +912,39 @@ function SpotlightCard({ pillar, variants }: any) {
             WebkitMaskImage: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
             WebkitMaskComposite: 'xor',
             maskComposite: 'exclude',
-            padding: '1px' // espessura da borda falsa
+            padding: '1px', // espessura da borda falsa
           }}
         />
 
-        <div style={{
-          width: 56, height: 56, borderRadius: '16px', marginBottom: '2rem',
-          background: 'linear-gradient(135deg, rgba(30,30,30,0.8), rgba(10,10,10,1))',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.4)',
-          position: 'relative', zIndex: 2
-        }}>
+        <div
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: '16px',
+            marginBottom: '2rem',
+            background: 'linear-gradient(135deg, rgba(30,30,30,0.8), rgba(10,10,10,1))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.4)',
+            position: 'relative',
+            zIndex: 2,
+          }}
+        >
           {pillar.icon}
         </div>
 
-        <h3 style={{ color: 'white', fontSize: '1.25rem', marginBottom: '1rem', fontFamily: 'var(--font-serif)', letterSpacing: '0.02em', position: 'relative', zIndex: 2 }}>
+        <h3
+          style={{
+            color: 'white',
+            fontSize: '1.25rem',
+            marginBottom: '1rem',
+            fontFamily: 'var(--font-serif)',
+            letterSpacing: '0.02em',
+            position: 'relative',
+            zIndex: 2,
+          }}
+        >
           {pillar.title}
         </h3>
 
@@ -934,12 +965,14 @@ function SpotlightCard({ pillar, variants }: any) {
 
 function HomePage({
   heroCanUseMouse,
+  isMobile,
   heroRef,
   canvasRef,
   onHeroMouseMove,
   onHeroMouseLeave,
 }: {
   heroCanUseMouse: boolean;
+  isMobile: boolean;
   heroRef: React.MutableRefObject<HTMLElement | null>;
   canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;
   onHeroMouseMove: (e: React.MouseEvent<HTMLElement>) => void;
@@ -949,28 +982,27 @@ function HomePage({
     <section
       ref={(n) => (heroRef.current = n)}
       className="hero-section"
-      onMouseMove={onHeroMouseMove}
-      onMouseLeave={onHeroMouseLeave}
+      onMouseMove={heroCanUseMouse ? onHeroMouseMove : undefined}
+      onMouseLeave={heroCanUseMouse ? onHeroMouseLeave : undefined}
       style={{
         position: 'relative',
         overflow: 'hidden',
 
-        // ✅ FIX DEFINITIVO: background direto com camadas (gradientes + imagem)
+        // ✅ A imagem continua nos dois; o efeito de luz só fica no PC
         backgroundImage: `
           linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
-          ${heroCanUseMouse ? 'radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),' : ''}
+          radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
           url("${heroHorseUrl}"),
           radial-gradient(circle at 2px 2px, rgba(212,175,55,0.03) 1px, transparent 0)
         `,
-        backgroundSize: heroCanUseMouse ? '100% 100%, 100% 100%, cover, 40px 40px' : '100% 100%, cover, 40px 40px',
-        backgroundPosition: heroCanUseMouse ? 'center, center, right center, center' : 'center, right center, center',
+        backgroundSize: '100% 100%, 100% 100%, cover, 40px 40px',
+        // Ajuste de posicionamento para mobile: centraliza mais a imagem para o cavalo aparecer melhor
+        backgroundPosition: isMobile ? 'center, center, 80% center, center' : 'center, center, right center, center',
         backgroundRepeat: 'no-repeat, no-repeat, no-repeat, repeat',
-
-        // fallback visual
         backgroundColor: '#000',
       }}
     >
-      {heroCanUseMouse ? (
+      {heroCanUseMouse && (
         <canvas
           ref={(n) => (canvasRef.current = n)}
           aria-hidden="true"
@@ -982,11 +1014,10 @@ function HomePage({
             zIndex: 1,
             pointerEvents: 'none',
             mixBlendMode: 'normal',
-            // O canvas em si já pinta uma máscara em rgba(3,3,3, 0.75 a 0.92)
             opacity: 1,
           }}
         />
-      ) : null}
+      )}
 
       <motion.div
         className="hero-container"
@@ -1065,13 +1096,13 @@ function ProductsPage({
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.15 }
-    }
+      transition: { staggerChildren: 0.15 },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
   };
 
   return (
@@ -1081,7 +1112,7 @@ function ProductsPage({
           className="products-header"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
           <h2 className="products-title">
@@ -1167,7 +1198,7 @@ function ProductsPage({
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true, margin: '-50px' }}
         >
           {products.map((p) => {
             const selected = selectedById[p.id] ?? p.defaultVolume;
@@ -1177,7 +1208,7 @@ function ProductsPage({
                 key={p.id}
                 className="product-card"
                 variants={itemVariants}
-                whileHover={{ y: -6, boxShadow: "0 25px 45px rgba(0, 0, 0, 0.9)" }}
+                whileHover={{ y: -6, boxShadow: '0 25px 45px rgba(0, 0, 0, 0.9)' }}
                 style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
               >
                 <div
@@ -1243,13 +1274,13 @@ function AboutPage() {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
+      transition: { staggerChildren: 0.2 },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
   };
 
   return (
@@ -1259,7 +1290,7 @@ function AboutPage() {
           className="section-header"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
           <h2 className="section-title">
@@ -1276,7 +1307,7 @@ function AboutPage() {
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true, margin: '-50px' }}
         >
           <motion.div className="about-card" variants={itemVariants}>
             <h3 className="about-title">Qualidade Premium</h3>
@@ -1332,7 +1363,7 @@ function ContactPage({
           className="section-header"
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8 }}
         >
           <h2 className="section-title">
@@ -1345,7 +1376,7 @@ function ContactPage({
           className="contact-card"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
+          viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <div
@@ -1371,7 +1402,7 @@ function ContactPage({
                 border: contactChannel === 'WHATSAPP' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'WHATSAPP' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'WHATSAPP' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
             >
               WhatsApp
@@ -1389,7 +1420,7 @@ function ContactPage({
                 border: contactChannel === 'EMAIL' ? '1px solid rgba(212,175,55,0.55)' : '1px solid rgba(255,255,255,0.18)',
                 background: contactChannel === 'EMAIL' ? 'rgba(212,175,55,0.10)' : 'transparent',
                 color: contactChannel === 'EMAIL' ? 'var(--color-gold)' : 'rgba(229,231,235,0.85)',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
               }}
             >
               E-mail
@@ -1709,12 +1740,10 @@ function AppShell() {
     const dt = Math.min(0.05, (t - last) / 1000);
     lastTRef.current = t;
 
-    // 1. Limpar e colorir de preto a máscara escura
     ctx.clearRect(0, 0, w, h);
     ctx.save();
     ctx.globalCompositeOperation = 'source-over';
 
-    // Fumaça de fundo geral - escura porém suave (85% a 92%)
     const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
     bgGrad.addColorStop(0, 'rgba(5,5,5,0.72)');
     bgGrad.addColorStop(1, 'rgba(2,2,2,0.92)');
@@ -1722,7 +1751,6 @@ function AppShell() {
     ctx.fillRect(0, 0, w, h);
     ctx.restore();
 
-    // Lerp (interpolação suave) da posição da luz até a posição real do mouse
     if (activeRef.current) {
       if (smoothPointerRef.current.x === -1000) {
         smoothPointerRef.current = { ...targetPointerRef.current };
@@ -1730,27 +1758,22 @@ function AppShell() {
       smoothPointerRef.current.x += (targetPointerRef.current.x - smoothPointerRef.current.x) * (8 * dt);
       smoothPointerRef.current.y += (targetPointerRef.current.y - smoothPointerRef.current.y) * (8 * dt);
     } else {
-      // Se saiu do canvas, some rápido e desliga
       smoothPointerRef.current.x = -1000;
       smoothPointerRef.current.y = -1000;
     }
 
     const { x, y } = smoothPointerRef.current;
 
-    // Se estiver ativo e dentro da tela, "apagar a fumaça" e gerar a luz suave
     if (x > -500 && y > -500 && activeRef.current) {
-      // 3. Modificador de máscara que cria um "buraco suave" que revela a foto linda de fundo
       ctx.save();
       ctx.globalCompositeOperation = 'destination-out';
 
-      // 🔥 AUMENTADO: Raio maior e opacidades mais altas para luz mais forte
-      const sizeBase = 650; // Era 400, agora 650 (maior alcance)
+      const sizeBase = 650;
 
       let g = ctx.createRadialGradient(x, y, 0, x, y, sizeBase);
-      // Remove 100% no meio revelando a imagem original, e vai reduzindo a fumaça sutilmente
       g.addColorStop(0, `rgba(0,0,0,1)`);
-      g.addColorStop(0.2, `rgba(0,0,0,0.95)`); // Mais opaco no centro
-      g.addColorStop(0.5, `rgba(0,0,0,0.6)`);  // Era 0.3, agora 0.6 (mais transparente = mais luz)
+      g.addColorStop(0.2, `rgba(0,0,0,0.95)`);
+      g.addColorStop(0.5, `rgba(0,0,0,0.6)`);
       g.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.fillStyle = g;
@@ -1759,13 +1782,12 @@ function AppShell() {
       ctx.fill();
       ctx.restore();
 
-      // 4. Tint de reflexo ouro/amarelo mais intenso
       ctx.save();
       ctx.globalCompositeOperation = 'source-over';
-      const tintRadius = 350; // Era 200, agora 350 (maior)
+      const tintRadius = 350;
       let tintGrad = ctx.createRadialGradient(x, y, 0, x, y, tintRadius);
-      tintGrad.addColorStop(0, `rgba(255,220,130,0.35)`); // Era 0.18, agora 0.35 (dobro de intensidade)
-      tintGrad.addColorStop(0.5, `rgba(212,175,55,0.15)`); // Era 0.06, agora 0.15
+      tintGrad.addColorStop(0, `rgba(255,220,130,0.35)`);
+      tintGrad.addColorStop(0.5, `rgba(212,175,55,0.15)`);
       tintGrad.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.fillStyle = tintGrad;
@@ -1828,7 +1850,6 @@ function AppShell() {
 
     if (!activeRef.current) {
       activeRef.current = true;
-      // Para não teleportar do canto (0,0) ou (-1000,-1000) de uma vez
       smoothPointerRef.current = { x, y };
     }
 
@@ -1837,8 +1858,6 @@ function AppShell() {
 
   const onHeroMouseLeave = () => {
     activeRef.current = false;
-    // Opcional: Para uma fumaça que decresce/desaparece lentamente, não zeramos ainda o anim frame,
-    // ele vai se redesenhar uma última vez sem o spotlight.
     targetPointerRef.current = { x: -1000, y: -1000 };
     startHeroLoop();
   };
@@ -1996,6 +2015,7 @@ function AppShell() {
               <>
                 <HomePage
                   heroCanUseMouse={heroCanUseMouse}
+                  isMobile={isMobile}
                   heroRef={heroRef}
                   canvasRef={canvasRef}
                   onHeroMouseMove={onHeroMouseMove}
