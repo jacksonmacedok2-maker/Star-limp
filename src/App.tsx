@@ -430,7 +430,7 @@ function SiteFooter({ headerWppLink }: { headerWppLink: string }) {
           border-top: 1px solid rgba(255,255,255,0.08);
           padding-top: 14px;
           display: flex;
-          justifyContent: space-between;
+          justify-content: space-between;
           alignItems: center;
           gap: 12px;
           flex-wrap: wrap;
@@ -958,12 +958,12 @@ function HomePage({
         // ✅ FIX DEFINITIVO: background direto com camadas (gradientes + imagem)
         backgroundImage: `
           linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
-          radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
+          ${heroCanUseMouse ? 'radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),' : ''}
           url("${heroHorseUrl}"),
           radial-gradient(circle at 2px 2px, rgba(212,175,55,0.03) 1px, transparent 0)
         `,
-        backgroundSize: '100% 100%, 100% 100%, cover, 40px 40px',
-        backgroundPosition: 'center, center, right center, center',
+        backgroundSize: heroCanUseMouse ? '100% 100%, 100% 100%, cover, 40px 40px' : '100% 100%, cover, 40px 40px',
+        backgroundPosition: heroCanUseMouse ? 'center, center, right center, center' : 'center, right center, center',
         backgroundRepeat: 'no-repeat, no-repeat, no-repeat, repeat',
 
         // fallback visual
@@ -986,17 +986,7 @@ function HomePage({
             opacity: 1,
           }}
         />
-      ) : (
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 0,
-            background: 'radial-gradient(1200px 700px at 70% 30%, rgba(3,3,3,0.75), rgba(3,3,3,0.92))',
-          }}
-        />
-      )}
+      ) : null}
 
       <motion.div
         className="hero-container"
