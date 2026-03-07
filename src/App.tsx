@@ -10,7 +10,7 @@ import heroHorseUrl from './assets/hero-horse-DSUKCTkd.webp';
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
 const INSTAGRAM_HANDLE = 'star_limp_shampo';
-const INSTAGRAM_URL = `https://instagram.com/ ${INSTAGRAM_HANDLE}`;
+const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM_HANDLE}/`;
 
 function buildWhatsAppLink(message: string) {
   return `https://wa.me/ ${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
