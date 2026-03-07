@@ -3,9 +3,8 @@ import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-do
 import { motion } from 'framer-motion';
 import { Shield, Sparkles, Feather } from 'lucide-react';
 
-// ✅ HERO IMAGE (Hostinger-safe)
-// Importando diretamente para que o Vite gerencie o caminho e o hash do arquivo
-import heroHorseUrl from './assets/hero-horse-DSUKCTkd.webp';
+// ✅ HERO IMAGE
+import heroHorseUrl from './assets/hero.jpg';
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
@@ -964,61 +963,31 @@ function SpotlightCard({ pillar, variants }: any) {
 }
 
 function HomePage({
-  heroCanUseMouse,
   isMobile,
   heroRef,
-  canvasRef,
-  onHeroMouseMove,
-  onHeroMouseLeave,
 }: {
-  heroCanUseMouse: boolean;
   isMobile: boolean;
   heroRef: React.MutableRefObject<HTMLElement | null>;
-  canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;
-  onHeroMouseMove: (e: React.MouseEvent<HTMLElement>) => void;
-  onHeroMouseLeave: () => void;
 }) {
   return (
     <section
       ref={(n) => (heroRef.current = n)}
       className="hero-section"
-      onMouseMove={heroCanUseMouse ? onHeroMouseMove : undefined}
-      onMouseLeave={heroCanUseMouse ? onHeroMouseLeave : undefined}
       style={{
         position: 'relative',
         overflow: 'hidden',
 
-        // ✅ A imagem continua nos dois; o efeito de luz só fica no PC
+        // Imagem nítida com gradiente suave apenas para legibilidade
         backgroundImage: `
-          linear-gradient(to bottom, rgba(10,10,10,0.72), rgba(10,10,10,0.98)),
-          radial-gradient(1000px 700px at 72% 45%, rgba(212,175,55,0.16), rgba(0,0,0,0) 60%),
-          url("${heroHorseUrl}"),
-          radial-gradient(circle at 2px 2px, rgba(212,175,55,0.03) 1px, transparent 0)
+          linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.85) 100%),
+          url("${heroHorseUrl}")
         `,
-        backgroundSize: '100% 100%, 100% 100%, cover, 40px 40px',
-        // Ajuste de posicionamento para mobile: centraliza mais a imagem para o cavalo aparecer melhor
-        backgroundPosition: isMobile ? 'center, center, 80% center, center' : 'center, center, right center, center',
-        backgroundRepeat: 'no-repeat, no-repeat, no-repeat, repeat',
+        backgroundSize: '100% 100%, cover',
+        backgroundPosition: isMobile ? 'center, 80% center' : 'center, right center',
+        backgroundRepeat: 'no-repeat, no-repeat',
         backgroundColor: '#000',
       }}
     >
-      {heroCanUseMouse && (
-        <canvas
-          ref={(n) => (canvasRef.current = n)}
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 1,
-            pointerEvents: 'none',
-            mixBlendMode: 'normal',
-            opacity: 1,
-          }}
-        />
-      )}
-
       <motion.div
         className="hero-container"
         style={{ position: 'relative', zIndex: 2 }}
@@ -1608,16 +1577,6 @@ function AppShell() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const heroRef = useRef<HTMLElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const rafRef = useRef<number | null>(null);
-
-  const smoothPointerRef = useRef({ x: -1000, y: -1000 });
-  const targetPointerRef = useRef({ x: -1000, y: -1000 });
-  const activeRef = useRef(false);
-  const lastTRef = useRef<number>(0);
-  const frameGateRef = useRef<number>(0);
-
-  const heroSizeRef = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
 
   const [contactChannel, setContactChannel] = useState<ContactChannel>('WHATSAPP');
   const [contactTopic, setContactTopic] = useState<'ORCAMENTO' | 'DUVIDAS' | 'REVENDEDOR' | 'PARCERIA' | 'OUTROS'>('ORCAMENTO');
@@ -1661,206 +1620,6 @@ function AppShell() {
     }
   }, [isMobile, mobileMenuOpen]);
 
-  const heroCanUseMouse = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  }, []);
-
-  const ensureHeroCanvasSize = (forceClear = false) => {
-    const heroEl = heroRef.current;
-    const c = canvasRef.current;
-    if (!heroEl || !c) return;
-
-    const rect = heroEl.getBoundingClientRect();
-    const w = Math.max(1, Math.floor(rect.width));
-    const h = Math.max(1, Math.floor(rect.height));
-
-    const prev = heroSizeRef.current;
-    if (!forceClear && prev.w === w && prev.h === h) return;
-
-    heroSizeRef.current = { w, h };
-
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-
-    c.style.width = `${w}px`;
-    c.style.height = `${h}px`;
-    c.width = Math.floor(w * dpr);
-    c.height = Math.floor(h * dpr);
-
-    const ctx = c.getContext('2d');
-    if (ctx) {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, w, h);
-    }
-  };
-
-  const hardStopAndClearHero = () => {
-    activeRef.current = false;
-    targetPointerRef.current = { x: -1000, y: -1000 };
-    smoothPointerRef.current = { x: -1000, y: -1000 };
-    lastTRef.current = 0;
-    frameGateRef.current = 0;
-
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
-
-    ensureHeroCanvasSize(true);
-  };
-
-  useEffect(() => {
-    if (!heroCanUseMouse) return;
-
-    if (location.pathname !== '/') {
-      hardStopAndClearHero();
-      return;
-    }
-
-    requestAnimationFrame(() => ensureHeroCanvasSize(true));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname, heroCanUseMouse]);
-
-  const drawHeroLight = (t: number) => {
-    const c = canvasRef.current;
-    const heroEl = heroRef.current;
-    if (!c || !heroEl) return;
-
-    if (t - frameGateRef.current < 20) return; // 50fps max para rodar suave
-    frameGateRef.current = t;
-
-    const ctx = c.getContext('2d');
-    if (!ctx) return;
-
-    const rect = heroEl.getBoundingClientRect();
-    const w = rect.width;
-    const h = rect.height;
-
-    const last = lastTRef.current || t;
-    const dt = Math.min(0.05, (t - last) / 1000);
-    lastTRef.current = t;
-
-    ctx.clearRect(0, 0, w, h);
-    ctx.save();
-    ctx.globalCompositeOperation = 'source-over';
-
-    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
-    bgGrad.addColorStop(0, 'rgba(5,5,5,0.72)');
-    bgGrad.addColorStop(1, 'rgba(2,2,2,0.92)');
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0, 0, w, h);
-    ctx.restore();
-
-    if (activeRef.current) {
-      if (smoothPointerRef.current.x === -1000) {
-        smoothPointerRef.current = { ...targetPointerRef.current };
-      }
-      smoothPointerRef.current.x += (targetPointerRef.current.x - smoothPointerRef.current.x) * (8 * dt);
-      smoothPointerRef.current.y += (targetPointerRef.current.y - smoothPointerRef.current.y) * (8 * dt);
-    } else {
-      smoothPointerRef.current.x = -1000;
-      smoothPointerRef.current.y = -1000;
-    }
-
-    const { x, y } = smoothPointerRef.current;
-
-    if (x > -500 && y > -500 && activeRef.current) {
-      ctx.save();
-      ctx.globalCompositeOperation = 'destination-out';
-
-      const sizeBase = 650;
-
-      let g = ctx.createRadialGradient(x, y, 0, x, y, sizeBase);
-      g.addColorStop(0, `rgba(0,0,0,1)`);
-      g.addColorStop(0.2, `rgba(0,0,0,0.95)`);
-      g.addColorStop(0.5, `rgba(0,0,0,0.6)`);
-      g.addColorStop(1, 'rgba(0,0,0,0)');
-
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(x, y, sizeBase, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      ctx.save();
-      ctx.globalCompositeOperation = 'source-over';
-      const tintRadius = 350;
-      let tintGrad = ctx.createRadialGradient(x, y, 0, x, y, tintRadius);
-      tintGrad.addColorStop(0, `rgba(255,220,130,0.35)`);
-      tintGrad.addColorStop(0.5, `rgba(212,175,55,0.15)`);
-      tintGrad.addColorStop(1, 'rgba(0,0,0,0)');
-
-      ctx.fillStyle = tintGrad;
-      ctx.beginPath();
-      ctx.arc(x, y, tintRadius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
-
-    if (!activeRef.current) {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-    }
-  };
-
-  const startHeroLoop = () => {
-    if (!heroCanUseMouse) return;
-    if (rafRef.current) return;
-
-    lastTRef.current = 0;
-    frameGateRef.current = 0;
-
-    const loop = (time: number) => {
-      drawHeroLight(time);
-      rafRef.current = requestAnimationFrame(loop);
-    };
-
-    rafRef.current = requestAnimationFrame(loop);
-  };
-
-  useEffect(() => {
-    if (!heroCanUseMouse) return;
-
-    ensureHeroCanvasSize(true);
-    const onResize = () => ensureHeroCanvasSize(true);
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heroCanUseMouse]);
-
-  const onHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (!heroCanUseMouse) return;
-    const el = heroRef.current;
-    if (!el) return;
-
-    ensureHeroCanvasSize(false);
-
-    const r = el.getBoundingClientRect();
-    const x = Math.max(0, Math.min(r.width, e.clientX - r.left));
-    const y = Math.max(0, Math.min(r.height, e.clientY - r.top));
-
-    targetPointerRef.current = { x, y };
-
-    if (!activeRef.current) {
-      activeRef.current = true;
-      smoothPointerRef.current = { x, y };
-    }
-
-    startHeroLoop();
-  };
-
-  const onHeroMouseLeave = () => {
-    activeRef.current = false;
-    targetPointerRef.current = { x: -1000, y: -1000 };
-    startHeroLoop();
-  };
 
   const defaultMessage = useMemo(() => {
     return `Olá! Vim pelo site da STAR LIMP. Quero tirar uma dúvida e solicitar um orçamento.`;
@@ -2014,12 +1773,8 @@ function AppShell() {
             element={
               <>
                 <HomePage
-                  heroCanUseMouse={heroCanUseMouse}
                   isMobile={isMobile}
                   heroRef={heroRef}
-                  canvasRef={canvasRef}
-                  onHeroMouseMove={onHeroMouseMove}
-                  onHeroMouseLeave={onHeroMouseLeave}
                 />
                 <PremiumMarquee />
                 <HomePillars />
