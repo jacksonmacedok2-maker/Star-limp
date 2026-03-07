@@ -8,10 +8,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     // ✅ Hostinger-safe:
-    // como sua imagem está em /public e no App.tsx você usa
-    // /hero-horse-DSUKCTkd.webp
-    // o mais seguro é publicar com base na raiz
-    base: '/',
+    // Garante que os assets sejam carregados com caminhos relativos
+    // Isso evita problemas se o site for hospedado em uma subpasta
+    base: './',
 
     plugins: [react(), tailwindcss()],
 
