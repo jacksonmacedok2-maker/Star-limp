@@ -7,9 +7,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
 
   return {
-    // ✅ FIX HOSTINGER: gera caminhos relativos no build (assets -> ./assets/...)
-    // Isso evita o bug do background sumir quando o site não está 100% na raiz do domínio.
-    base: './',
+    // ✅ Hostinger-safe:
+    // como sua imagem está em /public e no App.tsx você usa
+    // /hero-horse-DSUKCTkd.webp
+    // o mais seguro é publicar com base na raiz
+    base: '/',
 
     plugins: [react(), tailwindcss()],
 
