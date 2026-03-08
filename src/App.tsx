@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Shield, Sparkles, Feather } from 'lucide-react';
 
 // ✅ HERO IMAGE
-import heroHorseUrl from './assets/hero.png';
+const heroHorseUrl = './assets/hero.png';
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
