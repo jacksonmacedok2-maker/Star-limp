@@ -12,7 +12,7 @@ const INSTAGRAM_HANDLE = 'star_limp_shampo';
 const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM_HANDLE}/`;
 
 function buildWhatsAppLink(message: string) {
-  return `https://wa.me/ ${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 }
 
 function buildMailTo(subject: string, body: string) {
