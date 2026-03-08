@@ -976,18 +976,37 @@ function HomePage({
       style={{
         position: 'relative',
         overflow: 'hidden',
-
-        // Imagem nítida com gradiente suave apenas para legibilidade
-        backgroundImage: `
-          linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.85) 100%),
-          url("${heroHorseUrl}")
-        `,
-        backgroundSize: '100% 100%, cover',
-        backgroundPosition: isMobile ? 'center, 80% center' : 'center, right center',
-        backgroundRepeat: 'no-repeat, no-repeat',
         backgroundColor: '#000',
       }}
     >
+      {/* Imagem de fundo usando tag img para maior confiabilidade */}
+      <img
+        src={heroHorseUrl}
+        alt="Star Limp Hero"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: isMobile ? '80% center' : 'right center',
+          zIndex: 0,
+        }}
+      />
+      {/* Gradiente sobreposto para legibilidade */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.85) 100%)',
+          zIndex: 1,
+        }}
+      />
+
       <motion.div
         className="hero-container"
         style={{ position: 'relative', zIndex: 2 }}
