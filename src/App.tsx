@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Shield, Sparkles, Feather } from 'lucide-react';
 
 // ✅ HERO IMAGE
-const heroHorseUrl = './assets/hero.png';
+import heroHorseUrl from './assets/hero.jpg';
 
 const WHATSAPP_PHONE = '5575999736047';
 const EMAIL_TO = 'contato@starlimp.com.br'; // <-- TROQUE para seu email real
@@ -12,7 +12,7 @@ const INSTAGRAM_HANDLE = 'star_limp_shampo';
 const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM_HANDLE}/`;
 
 function buildWhatsAppLink(message: string) {
-  return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+  return `https://wa.me/ ${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 }
 
 function buildMailTo(subject: string, body: string) {
@@ -976,37 +976,18 @@ function HomePage({
       style={{
         position: 'relative',
         overflow: 'hidden',
+
+        // Imagem nítida com gradiente suave apenas para legibilidade
+        backgroundImage: `
+          linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.85) 100%),
+          url("${heroHorseUrl}")
+        `,
+        backgroundSize: '100% 100%, cover',
+        backgroundPosition: isMobile ? 'center, 80% center' : 'center, right center',
+        backgroundRepeat: 'no-repeat, no-repeat',
         backgroundColor: '#000',
       }}
     >
-      {/* Imagem de fundo usando tag img para maior confiabilidade */}
-      <img
-        src={heroHorseUrl}
-        alt="Star Limp Hero"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: isMobile ? '80% center' : 'right center',
-          zIndex: 0,
-        }}
-      />
-      {/* Gradiente sobreposto para legibilidade */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'linear-gradient(to bottom, rgba(10,10,10,0.2) 0%, rgba(10,10,10,0.85) 100%)',
-          zIndex: 1,
-        }}
-      />
-
       <motion.div
         className="hero-container"
         style={{ position: 'relative', zIndex: 2 }}
